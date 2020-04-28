@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>{{ glipahData }}</div>
 </template>
 
 <script>
@@ -7,10 +7,15 @@ import axios from "axios";
 
 export default {
   name: "GlipahUi",
+  data() {
+    return {
+      glipahData: ""
+    };
+  },
   mounted: function() {
     const url = this.getFunctionUrl(window.location.href);
     axios.get(url).then(response => {
-      console.log(response.data);
+      this.glipahData = response.data;
     });
   },
   methods: {
