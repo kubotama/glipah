@@ -15,7 +15,7 @@ export default {
   mounted: function() {
     const url = this.getFunctionUrl(window.location.href);
     axios.get(url).then(response => {
-      this.glipahData = response.data.headers["client-ip"];
+      this.glipahData = response.data;
     });
   },
   methods: {
