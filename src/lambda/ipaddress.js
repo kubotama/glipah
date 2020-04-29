@@ -5,6 +5,8 @@ export function handler(event, context, callback) {
   };
   // テスト環境では、ボタンが表示されているページとNetlify Functionsのポート番号が違うためCORS制約に違反する。
   // CORS制約を回避するためにAccess-Control-Allow-Origin属性を設定する。
+  // ローカル環境の判定は、event.headers.originあるいはevent.headers.refererに設定されているURLのポート番号が8080の場合、
+  // とする。
   let url;
   if (event.headers.origin) {
     url = new URL(event.headers.origin);
