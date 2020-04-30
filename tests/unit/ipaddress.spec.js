@@ -44,7 +44,7 @@ describe("IPアドレスの履歴の一覧表", () => {
     expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
     expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
     expect(table.element.rows.length).toBe(2);
-    expect(table.element.rows[1].cells[0].innerHTML).toBe("xx.xx.xx.xx");
+    expect(table.element.rows[1].cells[0].innerHTML).toBe("zz.zz.zz.zz");
     expect(table.element.rows[1].cells[1].innerHTML).toBe(
       "2020/04/30 12:34:56"
     );
