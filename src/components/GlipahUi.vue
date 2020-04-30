@@ -7,10 +7,10 @@
           <th>アクセス日時</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody v-for="item in ipHistory" :key="item.ipAddress">
         <tr>
-          <td>zz.zz.zz.zz</td>
-          <td>2020/04/30 12:34:56</td>
+          <td>{{ item.ipAddress }}</td>
+          <td>{{ item.accessDate }}</td>
         </tr>
       </tbody>
     </table>
@@ -24,7 +24,10 @@ export default {
   name: "GlipahUi",
   data() {
     return {
-      glipahData: ""
+      glipahData: "",
+      ipHistory: [
+        { ipAddress: "zz.zz.zz.zz", accessDate: "2020/04/30 12:34:56" }
+      ]
     };
   },
   mounted: function() {
