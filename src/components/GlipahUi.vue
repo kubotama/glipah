@@ -1,5 +1,21 @@
 <template>
-  <div>{{ glipahData }}</div>
+  <div>
+    {{ glipahData }}
+    <table id="ipHistory">
+      <thead>
+        <tr>
+          <th>IPアドレス</th>
+          <th>アクセス日時</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>xx.xx.xx.xx</td>
+          <td>2020/04/30 12:34:56</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
