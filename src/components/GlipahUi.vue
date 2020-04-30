@@ -21,7 +21,7 @@ export default {
   methods: {
     getFunctionUrl(pageUrl) {
       const url = new URL(pageUrl);
-      if (url.port == 8080) {
+      if (url.hostname == "localhost") {
         url.port = 9000;
       }
       url.pathname = ".netlify/functions/ipaddress";
