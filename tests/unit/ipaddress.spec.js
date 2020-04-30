@@ -27,7 +27,6 @@ describe("ファンクションのURLを取得する。", () => {
     expect(axios.get).toBeCalledWith(
       "http://localhost:9000/.netlify/functions/ipaddress"
     );
-    expect(wrapper.vm.glipahData).toBe("zz.zz.zz.zz");
   });
 });
 

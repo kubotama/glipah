@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ glipahData }}
     <table id="ipHistory">
       <thead>
         <tr>
