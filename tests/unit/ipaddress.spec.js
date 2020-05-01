@@ -45,8 +45,6 @@ describe("IPアドレスの履歴の一覧表", () => {
     table = wrapper.find("#ipHistory");
   });
 
-  // TODO: 日時のフォーマットを修正する
-  // YYYY-MM-DD HH:MM:SS
   it("表の行数とヘッダの見出し", () => {
     expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
     expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");

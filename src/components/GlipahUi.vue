@@ -31,10 +31,6 @@ export default {
   mounted: function() {
     const url = this.getFunctionUrl(window.location.href);
     axios.get(url).then(response => {
-      const date = new Date();
-      //       var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-      // var dateTimeFormat = new Intl.DateTimeFormat('sr-RS', options);
-      // console.log(dateTimeFormat.format(new Date()));
       const options = {
         year: "numeric",
         month: "2-digit",
@@ -44,10 +40,9 @@ export default {
         second: "2-digit"
       };
       const dateTimeFormat = new Intl.DateTimeFormat("ja-JP", options);
-      console.log(dateTimeFormat.format(date));
       this.ipHistory.unshift({
         ipAddress: response.data,
-        accessDate: dateTimeFormat.format(date)
+        accessDate: dateTimeFormat.format(new Date())
       });
     });
   },
