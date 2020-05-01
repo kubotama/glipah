@@ -29,8 +29,22 @@ export default {
     };
   },
   mounted: function() {
-    const url = this.getFunctionUrl(window.location.href);
-    axios.get(url).then(response => {
+    axios.get(this.getFunctionUrl(window.location.href)).then(response => {
+      this.addIpHistory(response.data, new Date());
+    });
+  },
+  methods: {
+    /**
+     * ipHistory配列の先頭にIPアドレスとアクセス日時を追加する。
+     * @param {string} ipAddress アクセス元のIPアドレス
+     * @param {Date} date アクセスした日時
+     */
+    addIpHistory(ipAddress, date) {
+      /**
+       * @type {Object} 日時のフォーマット
+       * 年は4桁、月、日、時、分、秒は2桁
+       * 1桁の数字の場合は十の位に0を入れる
+       */
       const options = {
         year: "numeric",
         month: "2-digit",
@@ -39,14 +53,15 @@ export default {
         minute: "2-digit",
         second: "2-digit"
       };
-      const dateTimeFormat = new Intl.DateTimeFormat("ja-JP", options);
+      /**
+       * @type {string} アクセスした日時を文字列に変換した結果
+       */
+      const accessDate = Intl.DateTimeFormat("ja-JP", options).format(date);
       this.ipHistory.unshift({
-        ipAddress: response.data,
-        accessDate: dateTimeFormat.format(new Date())
+        ipAddress: ipAddress,
+        accessDate: accessDate
       });
-    });
-  },
-  methods: {
+    },
     getFunctionUrl(pageUrl) {
       const url = new URL(pageUrl);
       if (url.hostname == "localhost") {
