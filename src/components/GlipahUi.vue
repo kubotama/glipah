@@ -25,15 +25,17 @@ export default {
   data() {
     return {
       glipahData: "",
-      ipHistory: [
-        { ipAddress: "zz.zz.zz.zz", accessDate: "2020/04/30 12:34:56" }
-      ]
+      ipHistory: []
     };
   },
   mounted: function() {
     const url = this.getFunctionUrl(window.location.href);
     axios.get(url).then(response => {
-      this.glipahData = response.data;
+      const date = new Date();
+      this.ipHistory.unshift({
+        ipAddress: response.data,
+        accessDate: date.toLocaleDateString() + " " + date.toLocaleTimeString()
+      });
     });
   },
   methods: {
