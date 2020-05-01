@@ -45,7 +45,7 @@ describe("IPアドレスの履歴の一覧表", () => {
     table = wrapper.find("#ipHistory");
   });
 
-  it("表の行数とヘッダの見出し", () => {
+  it("#8のテストケース1", () => {
     expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
     expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
     expect(table.element.rows.length).toBe(2);
