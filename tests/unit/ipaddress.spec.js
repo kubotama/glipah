@@ -10,6 +10,12 @@ axios.get.mockImplementation(() =>
   })
 );
 
+const OriginalDate = Date;
+const dateToUse = new Date("2020-04-30 12:34:56");
+jest.spyOn(global, "Date").mockImplementation(arg => {
+  return arg ? new OriginalDate(arg) : dateToUse;
+});
+
 describe("ファンクションのURLを取得する。", () => {
   let wrapper;
 
