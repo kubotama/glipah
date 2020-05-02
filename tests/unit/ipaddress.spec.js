@@ -7,7 +7,7 @@ jest.mock("axios");
 axios.get.mockImplementation(() =>
   Promise.resolve({
     status: 200,
-    data: "zz.zz.zz.zz"
+    data: { "client-ip": "zz.zz.zz.zz" }
   })
 );
 
@@ -56,8 +56,12 @@ describe("IPアドレスの履歴の一覧表", () => {
     );
   });
   it("#8のテストケース2", async () => {
-    wrapper.vm.addIpHistory("yy.yy.yy.yy", new Date("2020/05/01 11:11:11"));
+    wrapper.vm.addIpHistory(
+      { "client-ip": "yy.yy.yy.yy" },
+      new Date("2020/05/01 11:11:11")
+    );
     await flushPromises();
+    expect(table.element.rows.length).toBe(3);
     expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
     expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
     expect(table.element.rows[1].cells[0].innerHTML).toBe("yy.yy.yy.yy");
@@ -68,7 +72,6 @@ describe("IPアドレスの履歴の一覧表", () => {
     expect(table.element.rows[2].cells[1].innerHTML).toBe(
       "2020-04-30 12:34:56"
     );
-    expect(table.element.rows.length).toBe(3);
   });
 });
 
