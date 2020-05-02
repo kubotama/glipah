@@ -79,5 +79,11 @@ export default {
 table {
   margin-left: auto;
   margin-right: auto;
+  border-collapse: collapse;
+}
+td,
+th {
+  border: 1px solid;
+  margin: 0;
 }
 </style>
