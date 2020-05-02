@@ -1,5 +1,6 @@
 <template>
   <div>
+    <header><h1>Global IP Address History</h1></header>
     <table id="ipHistory">
       <thead>
         <tr>
@@ -86,5 +87,8 @@ th {
   border: 1px solid;
   margin: 0;
   padding: 0.5em 3em;
+}
+h1 {
+  text-align: center;
 }
 </style>
