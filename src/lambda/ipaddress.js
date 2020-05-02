@@ -1,7 +1,7 @@
 export function handler(event, context, callback) {
   const returnData = {
     statusCode: 200,
-    headers: { "Content-Type": "text/plain" }
+    headers: { "Content-Type": "text/json" }
   };
   // テスト環境では、ボタンが表示されているページとNetlify Functionsのポート番号が違うためCORS制約に違反する。
   // CORS制約を回避するためにAccess-Control-Allow-Origin属性を設定する。
@@ -14,7 +14,7 @@ export function handler(event, context, callback) {
     url = new URL(event.headers.referer);
   }
   if (url && url.port == 8080) {
-    returnData.body = "xx.xx.xx.xx";
+    // returnData.body = "xx.xx.xx.xx";
     if (!event.headers["user-agent"].match(/axios/)) {
       if (event.headers.origin) {
         returnData.headers["Access-Control-Allow-Origin"] =
@@ -24,9 +24,7 @@ export function handler(event, context, callback) {
           event.headers.referer;
       }
     }
-  } else {
-    // returnData.body = event.headers["client-ip"];
-    returnData.body = event.headers["X-Forwarded-For"];
   }
+  returnData.body = JSON.stringify(event.headers);
   callback(null, returnData);
 }
