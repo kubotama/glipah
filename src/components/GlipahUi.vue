@@ -80,13 +80,14 @@ export default {
 table {
   margin-left: auto;
   margin-right: auto;
+  margin-top: -1em;
   border-collapse: collapse;
 }
 td,
 th {
   border: 1px solid;
   margin: 0;
-  padding: 0.5em 3em;
+  padding: 0.2em 3em;
 }
 h1 {
   text-align: center;
