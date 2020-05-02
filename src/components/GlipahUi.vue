@@ -1,5 +1,6 @@
 <template>
   <div>
+    <header><h1>Global IP Address History</h1></header>
     <table id="ipHistory">
       <thead>
         <tr>
@@ -75,4 +76,20 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style scoped>
+table {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -1em;
+  border-collapse: collapse;
+}
+td,
+th {
+  border: 1px solid;
+  margin: 0;
+  padding: 0.2em 3em;
+}
+h1 {
+  text-align: center;
+}
+</style>
