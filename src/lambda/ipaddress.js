@@ -25,7 +25,8 @@ export function handler(event, context, callback) {
       }
     }
   } else {
-    returnData.body = event.headers["client-ip"];
+    // returnData.body = event.headers["client-ip"];
+    returnData.body = event.headers["X-Forwarded-For"];
   }
   callback(null, returnData);
 }
