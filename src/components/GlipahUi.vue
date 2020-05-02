@@ -85,5 +85,6 @@ td,
 th {
   border: 1px solid;
   margin: 0;
+  padding: 0.5em 3em;
 }
 </style>
