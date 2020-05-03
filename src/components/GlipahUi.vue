@@ -37,10 +37,10 @@ export default {
   methods: {
     /**
      * ipHistory配列の先頭にIPアドレスとアクセス日時を追加する。
-     * @param {string} ipAddress アクセス元のIPアドレス
+     * @param {json} header アクセス元のIPアドレス
      * @param {Date} date アクセスした日時
      */
-    addIpHistory(ipAddress, date) {
+    addIpHistory(header, date) {
       /**
        * @type {Object} 日時のフォーマット
        * 年は4桁、月、日、時、分、秒は2桁
@@ -54,6 +54,12 @@ export default {
         minute: "2-digit",
         second: "2-digit"
       };
+      let ipAddress;
+      if (header["client-ip"]) {
+        ipAddress = header["client-ip"];
+      } else {
+        ipAddress = "xx.xx.xx.xx";
+      }
       /**
        * @type {string} アクセスした日時を文字列に変換した結果
        */
