@@ -25,7 +25,6 @@ export default {
   name: "GlipahUi",
   data() {
     return {
-      glipahData: "",
       ipHistory: []
     };
   },
