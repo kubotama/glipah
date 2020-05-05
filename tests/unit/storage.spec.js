@@ -45,4 +45,17 @@ describe("初回アクセスのテスト", () => {
     });
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
+
+  it("保存されているデータが1件であることを確認する。", async () => {
+    const db = new Dexie("Glipah");
+    db.version(1).stores({ access: "++id, ipAddress" });
+    // db.open().catch(err => {
+    //   console.error("Failed to open db: " + (err.stack || err));
+    // });
+    db.open();
+    const addresses = await db.access
+      .where({ ipAddress: "zz.zz.zz.zz" })
+      .toArray();
+    expect(addresses.length).toBe(1);
+  });
 });
