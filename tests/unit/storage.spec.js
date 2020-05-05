@@ -31,7 +31,7 @@ jest.spyOn(global, "Date").mockImplementation(arg => {
 });
 Date.now = jest.fn(() => OriginalDate.now());
 
-describe("IPアドレスの履歴データベースを確認する。", () => {
+describe("初回アクセスのテスト", () => {
   let wrapper;
 
   beforeEach(() => {

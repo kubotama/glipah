@@ -20,6 +20,7 @@
 
 <script>
 import axios from "axios";
+import Dexie from "dexie";
 
 export default {
   name: "GlipahUi",
@@ -29,6 +30,10 @@ export default {
     };
   },
   mounted: function() {
+    const db = new Dexie("Glipah");
+    db.version(1).stores({ access: "++id" });
+    db.open();
+
     axios.get(this.getFunctionUrl(window.location.href)).then(response => {
       this.addIpHistory(response.data, new Date());
     });
