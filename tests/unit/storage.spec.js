@@ -38,9 +38,10 @@ describe("IPアドレスの履歴データベースを確認する。", () => {
     wrapper = shallowMount(GlipahUi);
   });
 
-  it("データベースが存在することを確認する。", async () => {
-    await Dexie.exists("Glipah").then(exists => {
+  it("データベースが存在することを確認する。", done => {
+    Dexie.exists("Glipah").then(exists => {
       expect(exists).toBeTruthy();
+      done();
     });
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
