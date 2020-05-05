@@ -16,6 +16,7 @@ const dateToUse = new Date("2020-04-30 12:34:56");
 jest.spyOn(global, "Date").mockImplementation(arg => {
   return arg ? new OriginalDate(arg) : dateToUse;
 });
+Date.now = jest.fn(() => OriginalDate.now());
 
 describe("ファンクションのURLを取得する。", () => {
   let wrapper;
