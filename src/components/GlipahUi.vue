@@ -36,7 +36,6 @@ export default {
 
     axios.get(this.getFunctionUrl(window.location.href)).then(response => {
       this.addIpHistory(response.data, new Date());
-      console.log(this.getIpAddress(response.data));
       db.access.add({
         ipAddress: this.getIpAddress(response.data),
         accessDate: this.dateToString(new Date())
