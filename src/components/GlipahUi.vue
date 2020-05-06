@@ -32,7 +32,6 @@ export default {
   mounted: function() {
     const db = new Dexie("Glipah");
     db.version(1).stores({ access: "++id, ipAddress" });
-    db.open();
 
     axios.get(this.getFunctionUrl(window.location.href)).then(response => {
       /**

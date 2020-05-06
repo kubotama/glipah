@@ -49,7 +49,6 @@ describe("初回アクセスのテスト", () => {
   it("保存されているデータが1件であることを確認する。", async () => {
     const db = new Dexie("Glipah");
     db.version(1).stores({ access: "++id, ipAddress" });
-    db.open();
     const addresses = await db.access
       .where({ ipAddress: "ab.cd.ef.gh" })
       .toArray();
