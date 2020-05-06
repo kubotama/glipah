@@ -31,11 +31,16 @@ export default {
   },
   mounted: function() {
     const db = new Dexie("Glipah");
-    db.version(1).stores({ access: "++id" });
+    db.version(1).stores({ access: "++id, ipAddress" });
     db.open();
 
     axios.get(this.getFunctionUrl(window.location.href)).then(response => {
       this.addIpHistory(response.data, new Date());
+      console.log(this.getIpAddress(response.data));
+      db.access.add({
+        ipAddress: this.getIpAddress(response.data),
+        accessDate: this.dateToString(new Date())
+      });
     });
   },
   methods: {
