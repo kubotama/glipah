@@ -35,23 +35,31 @@ export default {
     db.open();
 
     axios.get(this.getFunctionUrl(window.location.href)).then(response => {
-      this.addIpHistory(response.data, new Date());
+      /**
+       * @type {string} アクセス元のIPアドレス
+       */
+      const ipAddress = this.getIpAddress(response.data);
+      /**
+       * @type {string} アクセスした日時
+       */
+      const accessDate = this.dateToString(new Date());
+      this.addIpHistory(ipAddress, accessDate);
       db.access.add({
-        ipAddress: this.getIpAddress(response.data),
-        accessDate: this.dateToString(new Date())
+        ipAddress: ipAddress,
+        accessDate: accessDate
       });
     });
   },
   methods: {
     /**
      * ipHistory配列の先頭にIPアドレスとアクセス日時を追加する。
-     * @param {json} headers アクセス元のIPアドレス
-     * @param {Date} date アクセスした日時
+     * @param {string} ipAddress アクセス元のIPアドレス
+     * @param {string} accessDate アクセスした日時
      */
-    addIpHistory(headers, date) {
+    addIpHistory(ipAddress, accessDate) {
       this.ipHistory.unshift({
-        ipAddress: this.getIpAddress(headers),
-        accessDate: this.dateToString(date)
+        ipAddress: ipAddress,
+        accessDate: accessDate
       });
     },
 

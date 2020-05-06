@@ -58,8 +58,8 @@ describe("IPアドレスの履歴の一覧表", () => {
   });
   it("#8のテストケース2", async () => {
     wrapper.vm.addIpHistory(
-      { "client-ip": "yy.yy.yy.yy" },
-      new Date("2020/05/01 11:11:11")
+      "yy.yy.yy.yy",
+      wrapper.vm.dateToString(new Date("2020/05/01 11:11:11"))
     );
     await flushPromises();
     expect(table.element.rows.length).toBe(3);
