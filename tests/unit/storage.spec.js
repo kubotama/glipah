@@ -20,12 +20,12 @@ jest.mock("axios");
 axios.get.mockImplementation(() =>
   Promise.resolve({
     status: 200,
-    data: { "client-ip": "zz.zz.zz.zz" }
+    data: { "client-ip": "ab.cd.ef.gh" }
   })
 );
 
 const OriginalDate = Date;
-const dateToUse = new Date("2020-04-30 12:34:56");
+const dateToUse = new Date("2020-05-06 01:02:03");
 jest.spyOn(global, "Date").mockImplementation(arg => {
   return arg ? new OriginalDate(arg) : dateToUse;
 });
@@ -51,8 +51,10 @@ describe("初回アクセスのテスト", () => {
     db.version(1).stores({ access: "++id, ipAddress" });
     db.open();
     const addresses = await db.access
-      .where({ ipAddress: "zz.zz.zz.zz" })
+      .where({ ipAddress: "ab.cd.ef.gh" })
       .toArray();
     expect(addresses.length).toBe(1);
+    expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
+    expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
   });
 });
