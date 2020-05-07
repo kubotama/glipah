@@ -30,26 +30,32 @@ export default {
     };
   },
   mounted: function() {
-    const db = new Dexie("Glipah");
-    db.version(1).stores({ access: "++id, ipAddress" });
-
-    axios.get(this.getFunctionUrl(window.location.href)).then(response => {
-      /**
-       * @type {string} アクセス元のIPアドレス
-       */
-      const ipAddress = this.getIpAddress(response.data);
-      /**
-       * @type {string} アクセスした日時
-       */
-      const accessDate = this.dateToString(new Date());
-      this.addIpHistory(ipAddress, accessDate);
-      db.access.add({
-        ipAddress: ipAddress,
-        accessDate: accessDate
-      });
-    });
+    this.accessFunction();
   },
   methods: {
+    /**
+     * ファンクションにアクセスしてIPアドレスとアクセス日時をデータベースに保存する。
+     */
+    accessFunction() {
+      axios.get(this.getFunctionUrl(window.location.href)).then(response => {
+        /**
+         * @type {string} アクセス元のIPアドレス
+         */
+        const ipAddress = this.getIpAddress(response.data);
+        /**
+         * @type {string} アクセスした日時
+         */
+        const accessDate = this.dateToString(new Date());
+        this.addIpHistory(ipAddress, accessDate);
+
+        const db = new Dexie("Glipah");
+        db.version(1).stores({ access: "++id, ipAddress" });
+        db.access.add({
+          ipAddress: ipAddress,
+          accessDate: accessDate
+        });
+      });
+    },
     /**
      * ipHistory配列の先頭にIPアドレスとアクセス日時を追加する。
      * @param {string} ipAddress アクセス元のIPアドレス
