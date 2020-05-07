@@ -46,14 +46,42 @@ describe("初回アクセスのテスト", () => {
     expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
-  it("保存されているデータが1件であることを確認する。", async () => {
+  it("保存されているデータが1件であることを確認する。", done => {
     const db = new Dexie("Glipah");
     db.version(1).stores({ access: "++id, ipAddress" });
-    const addresses = await db.access
-      .where({ ipAddress: "ab.cd.ef.gh" })
-      .toArray();
-    expect(addresses.length).toBe(1);
-    expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
-    expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
+    db.access.where({ ipAddress: "ab.cd.ef.gh" }).toArray(addresses => {
+      expect(addresses.length).toBe(1);
+      expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
+      expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
+      done();
+    });
   });
+});
+
+describe("2回めのアクセスのテスト", () => {
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = shallowMount(GlipahUi);
+  });
+
+  it("データベースが存在することを確認する。", done => {
+    Dexie.exists("Glipah").then(exists => {
+      expect(exists).toBeTruthy();
+      done();
+    });
+    expect(wrapper.isVueInstance()).toBeTruthy();
+  });
+
+  // it("保存されているデータが1件であることを確認する。", done => {
+  //   const db = new Dexie("Glipah");
+  //   db.version(1).stores({ access: "++id, ipAddress" });
+  //   db.access.where({ ipAddress: "ab.cd.ef.gh" }).toArray(addresses => {
+  //     expect(addresses.length).toBe(1);
+  //     expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
+  //     expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
+  //     done();
+  //   });
+  //   expect(wrapper.isVueInstance()).toBeTruthy();
+  // });
 });
