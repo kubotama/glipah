@@ -1,20 +1,23 @@
 <template>
   <div>
     <header><h1>Global IP Address History</h1></header>
-    <table id="ipHistory">
-      <thead>
-        <tr>
-          <th>IPアドレス</th>
-          <th>アクセス日時</th>
-        </tr>
-      </thead>
-      <tbody v-for="item in ipHistory" :key="item.ipAddress">
-        <tr>
-          <td>{{ item.ipAddress }}</td>
-          <td>{{ item.accessDate }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="button-row"><button>確認</button></div>
+    <div>
+      <table id="ipHistory">
+        <thead>
+          <tr>
+            <th>IPアドレス</th>
+            <th>アクセス日時</th>
+          </tr>
+        </thead>
+        <tbody v-for="item in ipHistory" :key="item.ipAddress">
+          <tr>
+            <td>{{ item.ipAddress }}</td>
+            <td>{{ item.accessDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -123,7 +126,7 @@ export default {
 table {
   margin-left: auto;
   margin-right: auto;
-  margin-top: -1em;
+  margin-top: 1em;
   border-collapse: collapse;
 }
 td,
@@ -134,5 +137,9 @@ th {
 }
 h1 {
   text-align: center;
+}
+.button-row {
+  text-align: center;
+  margin-top: -1em;
 }
 </style>
