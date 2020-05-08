@@ -1,7 +1,9 @@
 <template>
   <div>
     <header><h1>Global IP Address History</h1></header>
-    <div class="button-row"><button>確認</button></div>
+    <div class="button-row">
+      <button @click="onButtonClick" id="buttonClick">確認</button>
+    </div>
     <div>
       <table id="ipHistory">
         <thead>
@@ -10,7 +12,7 @@
             <th>アクセス日時</th>
           </tr>
         </thead>
-        <tbody v-for="item in ipHistory" :key="item.ipAddress">
+        <tbody v-for="item in ipHistory" :key="item.id">
           <tr>
             <td>{{ item.ipAddress }}</td>
             <td>{{ item.accessDate }}</td>
@@ -32,40 +34,59 @@ export default {
       ipHistory: []
     };
   },
-  mounted: function() {
-    this.accessFunction();
-  },
+  // mounted: function() {
+  //   this.accessFunction();
+  // },
   methods: {
+    onButtonClick() {
+      this.accessFunction();
+    },
     /**
      * ファンクションにアクセスしてIPアドレスとアクセス日時をデータベースに保存する。
      */
     accessFunction() {
-      axios.get(this.getFunctionUrl(window.location.href)).then(response => {
-        /**
-         * @type {string} アクセス元のIPアドレス
-         */
-        const ipAddress = this.getIpAddress(response.data);
-        /**
-         * @type {string} アクセスした日時
-         */
-        const accessDate = this.dateToString(new Date());
-        this.addIpHistory(ipAddress, accessDate);
+      return axios
+        .get(this.getFunctionUrl(window.location.href))
+        .then(response => {
+          /**
+           * @type {string} アクセス元のIPアドレス
+           */
+          const ipAddress = this.getIpAddress(response.data);
+          /**
+           * @type {string} アクセスした日時
+           */
+          const accessDate = this.dateToString(new Date());
+          // this.addIpHistory(ipAddress, accessDate);
+          // console.log(window.location.href);
 
-        const db = new Dexie("Glipah");
-        db.version(1).stores({ access: "++id, ipAddress" });
-        db.access.add({
-          ipAddress: ipAddress,
-          accessDate: accessDate
+          const db = new Dexie("Glipah");
+          db.version(1).stores({ access: "++id, ipAddress" });
+          return db.access.add({
+            ipAddress: ipAddress,
+            accessDate: accessDate
+            // })
+            // .then(item => {
+            //   console.log(item);
+            // })
+            // .catch(error => {
+            //   console.log("add", error);
+          });
+        })
+        .catch(error => {
+          return new Promise(() => {
+            console.log("get: ", error);
+          });
         });
-      });
     },
     /**
      * ipHistory配列の先頭にIPアドレスとアクセス日時を追加する。
+     * @param {integer} id データベース項目のid
      * @param {string} ipAddress アクセス元のIPアドレス
      * @param {string} accessDate アクセスした日時
      */
-    addIpHistory(ipAddress, accessDate) {
+    addIpHistory(id, ipAddress, accessDate) {
       this.ipHistory.unshift({
+        id: id,
         ipAddress: ipAddress,
         accessDate: accessDate
       });
@@ -110,12 +131,17 @@ export default {
     },
 
     getFunctionUrl(pageUrl) {
-      const url = new URL(pageUrl);
-      if (url.port == 8080) {
-        url.port = 9000;
+      try {
+        const url = new URL(pageUrl);
+        if (url.port == 8080) {
+          url.port = 9000;
+        }
+        url.pathname = ".netlify/functions/ipaddress";
+        // console.log(url.href);
+        return url.href;
+      } catch (e) {
+        console.log(e);
       }
-      url.pathname = ".netlify/functions/ipaddress";
-      return url.href;
     }
   }
 };

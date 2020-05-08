@@ -23,6 +23,7 @@ describe("ファンクションのURLを取得する。", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
+    wrapper.find("#buttonClick").trigger("click");
   });
 
   it.each`
@@ -44,7 +45,13 @@ describe("IPアドレスの履歴の一覧表", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
+    // wrapper.find("#buttonClick").trigger("click");
     table = wrapper.find("#ipHistory");
+    wrapper.vm.addIpHistory(
+      1,
+      "zz.zz.zz.zz",
+      wrapper.vm.dateToString(new Date("2020/04/30 12:34:56"))
+    );
   });
 
   it("#8のテストケース1", () => {
@@ -58,6 +65,7 @@ describe("IPアドレスの履歴の一覧表", () => {
   });
   it("#8のテストケース2", async () => {
     wrapper.vm.addIpHistory(
+      2,
       "yy.yy.yy.yy",
       wrapper.vm.dateToString(new Date("2020/05/01 11:11:11"))
     );

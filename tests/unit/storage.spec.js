@@ -38,22 +38,32 @@ describe("初回アクセスのテスト", () => {
     wrapper = shallowMount(GlipahUi);
   });
 
+  afterEach(() => {
+    Dexie.delete("Glipah");
+  });
+
   it("データベースが存在することを確認する。", done => {
-    Dexie.exists("Glipah").then(exists => {
-      expect(exists).toBeTruthy();
-      done();
+    wrapper.vm.accessFunction().then(() => {
+      Dexie.exists("Glipah").then(exists => {
+        expect(exists).toBeTruthy();
+        done();
+      });
     });
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
   it("保存されているデータが1件であることを確認する。", done => {
-    const db = new Dexie("Glipah");
-    db.version(1).stores({ access: "++id, ipAddress" });
-    db.access.where({ ipAddress: "ab.cd.ef.gh" }).toArray(addresses => {
-      expect(addresses.length).toBe(1);
-      expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
-      expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
-      done();
+    wrapper.vm.accessFunction().then(() => {
+      const db = new Dexie("Glipah");
+      db.version(1).stores({ access: "++id, ipAddress" });
+      db.access
+        .where({ ipAddress: "ab.cd.ef.gh" })
+        .toArray()
+        .then(addresses => {
+          expect(addresses.length).toBe(1);
+          expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
+          expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
+          done();
+        });
     });
   });
 });
@@ -63,25 +73,41 @@ describe("2回めのアクセスのテスト", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
+    Dexie.delete("Glipah");
   });
 
   it("データベースが存在することを確認する。", done => {
-    Dexie.exists("Glipah").then(exists => {
-      expect(exists).toBeTruthy();
-      done();
+    wrapper.vm.accessFunction().then(() => {
+      Dexie.exists("Glipah").then(exists => {
+        expect(exists).toBeTruthy();
+        // console.log(exists);
+        done();
+        // })
+        // .catch(error => {
+        //   // done(error);
+        //   console.log(error);
+      });
+      // done();
+      // })
+      // .catch(error => {
+      //   done(error);
     });
-    expect(wrapper.isVueInstance()).toBeTruthy();
   });
 
-  // it("保存されているデータが1件であることを確認する。", done => {
-  //   const db = new Dexie("Glipah");
-  //   db.version(1).stores({ access: "++id, ipAddress" });
-  //   db.access.where({ ipAddress: "ab.cd.ef.gh" }).toArray(addresses => {
-  //     expect(addresses.length).toBe(1);
-  //     expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
-  //     expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
-  //     done();
-  //   });
-  //   expect(wrapper.isVueInstance()).toBeTruthy();
-  // });
+  it("保存されているデータが2件であることを確認する。", done => {
+    wrapper.vm.accessFunction().then(() => {
+      wrapper.vm.accessFunction().then(() => {
+        const db = new Dexie("Glipah");
+        db.version(1).stores({ access: "++id, ipAddress" });
+        db.access.where({ ipAddress: "ab.cd.ef.gh" }).toArray(addresses => {
+          expect(addresses.length).toBe(2);
+          expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
+          expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
+          expect(addresses[1].ipAddress).toBe("ab.cd.ef.gh");
+          expect(addresses[1].accessDate).toBe("2020-05-06 01:02:03");
+          done();
+        });
+      });
+    });
+  });
 });
