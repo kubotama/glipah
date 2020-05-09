@@ -34,9 +34,6 @@ export default {
       ipHistory: []
     };
   },
-  // mounted: function() {
-  //   this.accessFunction();
-  // },
   methods: {
     onButtonClick() {
       this.accessFunction();
@@ -56,20 +53,12 @@ export default {
            * @type {string} アクセスした日時
            */
           const accessDate = this.dateToString(new Date());
-          // this.addIpHistory(ipAddress, accessDate);
-          // console.log(window.location.href);
 
           const db = new Dexie("Glipah");
           db.version(1).stores({ access: "++id, ipAddress" });
           return db.access.add({
             ipAddress: ipAddress,
             accessDate: accessDate
-            // })
-            // .then(item => {
-            //   console.log(item);
-            // })
-            // .catch(error => {
-            //   console.log("add", error);
           });
         })
         .catch(error => {
@@ -137,7 +126,6 @@ export default {
           url.port = 9000;
         }
         url.pathname = ".netlify/functions/ipaddress";
-        // console.log(url.href);
         return url.href;
       } catch (e) {
         console.log(e);

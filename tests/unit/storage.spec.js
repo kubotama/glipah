@@ -80,17 +80,8 @@ describe("2回めのアクセスのテスト", () => {
     wrapper.vm.accessFunction().then(() => {
       Dexie.exists("Glipah").then(exists => {
         expect(exists).toBeTruthy();
-        // console.log(exists);
         done();
-        // })
-        // .catch(error => {
-        //   // done(error);
-        //   console.log(error);
       });
-      // done();
-      // })
-      // .catch(error => {
-      //   done(error);
     });
   });
 

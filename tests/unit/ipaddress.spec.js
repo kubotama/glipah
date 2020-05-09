@@ -45,7 +45,6 @@ describe("IPアドレスの履歴の一覧表", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
-    // wrapper.find("#buttonClick").trigger("click");
     table = wrapper.find("#ipHistory");
     wrapper.vm.addIpHistory(
       1,
@@ -83,5 +82,3 @@ describe("IPアドレスの履歴の一覧表", () => {
     );
   });
 });
-
-// TODO: 履歴が複数行のテストを作成する。
