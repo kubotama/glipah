@@ -66,6 +66,20 @@ describe("初回アクセスのテスト", () => {
         });
     });
   });
+
+  it("保存されているデータが表示されていることを確認する。", done => {
+    wrapper.vm.accessFunction().then(() => {
+      const table = wrapper.find("#ipHistory");
+      expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+      expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
+      expect(table.element.rows.length).toBe(2);
+      expect(table.element.rows[1].cells[0].innerHTML).toBe("zz.zz.zz.zz");
+      expect(table.element.rows[1].cells[1].innerHTML).toBe(
+        "2020-04-30 12:34:56"
+      );
+      done();
+    });
+  });
 });
 
 describe("2回めのアクセスのテスト", () => {
