@@ -16,16 +16,17 @@ global.IDBRequest = require("fake-indexeddb/lib/FDBRequest");
 global.IDBTransaction = require("fake-indexeddb/lib/FDBTransaction");
 global.IDBVersionChangeEvent = require("fake-indexeddb/lib/FDBVersionChangeEvent");
 
+let ipToUse = "ab.cd.ef.gh";
 jest.mock("axios");
 axios.get.mockImplementation(() =>
   Promise.resolve({
     status: 200,
-    data: { "client-ip": "ab.cd.ef.gh" }
+    data: { "client-ip": ipToUse }
   })
 );
 
 const OriginalDate = Date;
-const dateToUse = new Date("2020-05-06 01:02:03");
+let dateToUse = new Date("2020-05-06 01:02:03");
 jest.spyOn(global, "Date").mockImplementation(arg => {
   return arg ? new OriginalDate(arg) : dateToUse;
 });
@@ -140,6 +141,42 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
           expect(table.element.rows[2].cells[2].innerHTML).toBe(
             "2020-05-06 01:02:03"
           );
+          done();
+        });
+      });
+  });
+});
+
+describe("2回めのアクセス(違うIPアドレス)のテスト", () => {
+  let wrapper;
+  let db;
+
+  beforeEach(() => {
+    wrapper = shallowMount(GlipahUi);
+    db = new Dexie("Glipah");
+    db.version(1).stores({ access: "++id, ipAddress" });
+  });
+
+  it("保存されているデータが2件であることを確認する。", done => {
+    db.access
+      .clear()
+      .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-05-10 00:11:22");
+        ipToUse = "11.22.33.44";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        return db.access.toArray().then(addresses => {
+          expect(addresses.length).toBe(2);
+          expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
+          expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
+          expect(addresses[1].ipAddress).toBe("11.22.33.44");
+          expect(addresses[1].accessDate).toBe("2020-05-10 00:11:22");
           done();
         });
       });
