@@ -8,12 +8,14 @@
       <table id="ipHistory">
         <thead>
           <tr>
+            <th>id</th>
             <th>IPアドレス</th>
             <th>アクセス日時</th>
           </tr>
         </thead>
         <tbody v-for="item in ipHistory" :key="item.id">
           <tr>
+            <td>{{ item.id }}</td>
             <td>{{ item.ipAddress }}</td>
             <td>{{ item.accessDate }}</td>
           </tr>
@@ -38,10 +40,28 @@ export default {
     onButtonClick() {
       this.accessFunction();
     },
+    loadHistory() {
+      const db = new Dexie("Glipah");
+      db.version(1).stores({ access: "++id, ipAddress" });
+      return db.access.toArray();
+    },
     /**
      * ファンクションにアクセスしてIPアドレスとアクセス日時をデータベースに保存する。
      */
     accessFunction() {
+      // const db = new Dexie("Glipah");
+      // db.version(1).stores({ access: "++id, ipAddress" });
+      // db.access.hook("creating", function() {
+      //   this.loadHistory().then(addresses => {
+      //     addresses.forEach(address => {
+      //       this.addIpHistory(
+      //         address.id,
+      //         address.ipAddress,
+      //         address.accessDate
+      //       );
+      //     });
+      //   });
+      // });
       return axios
         .get(this.getFunctionUrl(window.location.href))
         .then(response => {
@@ -56,10 +76,23 @@ export default {
 
           const db = new Dexie("Glipah");
           db.version(1).stores({ access: "++id, ipAddress" });
-          return db.access.add({
-            ipAddress: ipAddress,
-            accessDate: accessDate
-          });
+          return db.access
+            .add({
+              ipAddress: ipAddress,
+              accessDate: accessDate
+            })
+            .then(() => {
+              this.ipHistory = [];
+              return this.loadHistory().then(addresses => {
+                addresses.forEach(address => {
+                  this.addIpHistory(
+                    address.id,
+                    address.ipAddress,
+                    address.accessDate
+                  );
+                });
+              });
+            });
         })
         .catch(error => {
           return new Promise(() => {

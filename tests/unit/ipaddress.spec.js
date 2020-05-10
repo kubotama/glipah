@@ -23,19 +23,31 @@ describe("ファンクションのURLを取得する。", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
-    wrapper.find("#buttonClick").trigger("click");
+    // wrapper.find("#buttonClick").trigger("click");
   });
 
-  it.each`
-    beforeUrl                        | afterUrl
-    ${"http://localhost:8080"}       | ${"http://localhost:9000/.netlify/functions/ipaddress"}
-    ${"https://glipah.netlify.app/"} | ${"https://glipah.netlify.app/.netlify/functions/ipaddress"}
-  `("$beforeUrl -> $afterUrl", ({ beforeUrl, afterUrl }) => {
-    expect(wrapper.vm.getFunctionUrl(beforeUrl)).toBe(afterUrl);
-    expect(axios.get).toBeCalledTimes(1);
-    expect(axios.get).toBeCalledWith(
-      "http://localhost:9000/.netlify/functions/ipaddress"
-    );
+  // it.each`
+  //   beforeUrl                        | afterUrl
+  //   ${"http://localhost:8080"}       | ${"http://localhost:9000/.netlify/functions/ipaddress"}
+  //   ${"https://glipah.netlify.app/"} | ${"https://glipah.netlify.app/.netlify/functions/ipaddress"}
+  // `("$beforeUrl -> $afterUrl", ({ beforeUrl, afterUrl }) => {
+  it("ページのURLからファンクションのURLへの変換を確認する。", done => {
+    const beforeUrl = "http://localhost:8080";
+    const afterUrl = "http://localhost:9000/.netlify/functions/ipaddress";
+    wrapper.vm
+      .accessFunction()
+      .then(() => {
+        expect(wrapper.vm.getFunctionUrl(beforeUrl)).toBe(afterUrl);
+        expect(axios.get).toBeCalledTimes(1);
+        expect(axios.get).toBeCalledWith(
+          "http://localhost:9000/.netlify/functions/ipaddress"
+        );
+        done();
+      })
+      .catch(err => {
+        // expect(err).not.toThrowError();
+        done(err);
+      });
   });
 });
 
@@ -54,11 +66,11 @@ describe("IPアドレスの履歴の一覧表", () => {
   });
 
   it("#8のテストケース1", () => {
-    expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
-    expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
+    expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
+    expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
     expect(table.element.rows.length).toBe(2);
-    expect(table.element.rows[1].cells[0].innerHTML).toBe("zz.zz.zz.zz");
-    expect(table.element.rows[1].cells[1].innerHTML).toBe(
+    expect(table.element.rows[1].cells[1].innerHTML).toBe("zz.zz.zz.zz");
+    expect(table.element.rows[1].cells[2].innerHTML).toBe(
       "2020-04-30 12:34:56"
     );
   });
@@ -70,14 +82,14 @@ describe("IPアドレスの履歴の一覧表", () => {
     );
     await flushPromises();
     expect(table.element.rows.length).toBe(3);
-    expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
-    expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
-    expect(table.element.rows[1].cells[0].innerHTML).toBe("yy.yy.yy.yy");
-    expect(table.element.rows[1].cells[1].innerHTML).toBe(
+    expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
+    expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
+    expect(table.element.rows[1].cells[1].innerHTML).toBe("yy.yy.yy.yy");
+    expect(table.element.rows[1].cells[2].innerHTML).toBe(
       "2020-05-01 11:11:11"
     );
-    expect(table.element.rows[2].cells[0].innerHTML).toBe("zz.zz.zz.zz");
-    expect(table.element.rows[2].cells[1].innerHTML).toBe(
+    expect(table.element.rows[2].cells[1].innerHTML).toBe("zz.zz.zz.zz");
+    expect(table.element.rows[2].cells[2].innerHTML).toBe(
       "2020-04-30 12:34:56"
     );
   });
