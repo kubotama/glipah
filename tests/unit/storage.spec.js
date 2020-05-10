@@ -39,12 +39,7 @@ describe("初回アクセスのテスト", () => {
     wrapper = shallowMount(GlipahUi);
     db = new Dexie("Glipah");
     db.version(1).stores({ access: "++id, ipAddress" });
-    // db.access.clear();
   });
-
-  // afterEach(() => {
-  //   db.access.clear();
-  // });
 
   it("データベースが存在することを確認する。", done => {
     wrapper.vm.accessFunction().then(() => {

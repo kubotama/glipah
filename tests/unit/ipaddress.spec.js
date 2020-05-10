@@ -23,7 +23,6 @@ describe("ファンクションのURLを取得する。", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
-    // wrapper.find("#buttonClick").trigger("click");
   });
 
   // it.each`
@@ -45,7 +44,6 @@ describe("ファンクションのURLを取得する。", () => {
         done();
       })
       .catch(err => {
-        // expect(err).not.toThrowError();
         done(err);
       });
   });

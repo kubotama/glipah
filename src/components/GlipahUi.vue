@@ -49,19 +49,6 @@ export default {
      * ファンクションにアクセスしてIPアドレスとアクセス日時をデータベースに保存する。
      */
     accessFunction() {
-      // const db = new Dexie("Glipah");
-      // db.version(1).stores({ access: "++id, ipAddress" });
-      // db.access.hook("creating", function() {
-      //   this.loadHistory().then(addresses => {
-      //     addresses.forEach(address => {
-      //       this.addIpHistory(
-      //         address.id,
-      //         address.ipAddress,
-      //         address.accessDate
-      //       );
-      //     });
-      //   });
-      // });
       return axios
         .get(this.getFunctionUrl(window.location.href))
         .then(response => {
