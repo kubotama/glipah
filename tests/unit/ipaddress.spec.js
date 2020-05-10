@@ -32,6 +32,16 @@ describe("ファンクションのURLを取得する。", () => {
   `("$beforeUrl -> $afterUrl", ({ beforeUrl, afterUrl }) => {
     expect(wrapper.vm.getFunctionUrl(beforeUrl)).toBe(afterUrl);
   });
+
+  it("ファンクションへのアクセスを確認する", done => {
+    wrapper.vm.accessFunction().then(() => {
+      expect(axios.get).toBeCalledTimes(1);
+      expect(axios.get).toBeCalledWith(
+        "http://localhost:9000/.netlify/functions/ipaddress"
+      );
+      done();
+    });
+  });
 });
 
 describe("IPアドレスの履歴の一覧表", () => {
