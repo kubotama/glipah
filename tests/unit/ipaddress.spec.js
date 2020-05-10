@@ -25,27 +25,12 @@ describe("ファンクションのURLを取得する。", () => {
     wrapper = shallowMount(GlipahUi);
   });
 
-  // it.each`
-  //   beforeUrl                        | afterUrl
-  //   ${"http://localhost:8080"}       | ${"http://localhost:9000/.netlify/functions/ipaddress"}
-  //   ${"https://glipah.netlify.app/"} | ${"https://glipah.netlify.app/.netlify/functions/ipaddress"}
-  // `("$beforeUrl -> $afterUrl", ({ beforeUrl, afterUrl }) => {
-  it("ページのURLからファンクションのURLへの変換を確認する。", done => {
-    const beforeUrl = "http://localhost:8080";
-    const afterUrl = "http://localhost:9000/.netlify/functions/ipaddress";
-    wrapper.vm
-      .accessFunction()
-      .then(() => {
-        expect(wrapper.vm.getFunctionUrl(beforeUrl)).toBe(afterUrl);
-        expect(axios.get).toBeCalledTimes(1);
-        expect(axios.get).toBeCalledWith(
-          "http://localhost:9000/.netlify/functions/ipaddress"
-        );
-        done();
-      })
-      .catch(err => {
-        done(err);
-      });
+  it.each`
+    beforeUrl                        | afterUrl
+    ${"http://localhost:8080"}       | ${"http://localhost:9000/.netlify/functions/ipaddress"}
+    ${"https://glipah.netlify.app/"} | ${"https://glipah.netlify.app/.netlify/functions/ipaddress"}
+  `("$beforeUrl -> $afterUrl", ({ beforeUrl, afterUrl }) => {
+    expect(wrapper.vm.getFunctionUrl(beforeUrl)).toBe(afterUrl);
   });
 });
 
