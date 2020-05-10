@@ -86,29 +86,27 @@ describe("初回アクセスのテスト", () => {
   });
 });
 
-describe.skip("2回めのアクセスのテスト", () => {
+describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
   let wrapper;
+  let db;
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
-    Dexie.delete("Glipah");
-  });
-
-  it("データベースが存在することを確認する。", done => {
-    wrapper.vm.accessFunction().then(() => {
-      Dexie.exists("Glipah").then(exists => {
-        expect(exists).toBeTruthy();
-        done();
-      });
-    });
+    db = new Dexie("Glipah");
+    db.version(1).stores({ access: "++id, ipAddress" });
   });
 
   it("保存されているデータが2件であることを確認する。", done => {
-    wrapper.vm.accessFunction().then(() => {
-      wrapper.vm.accessFunction().then(() => {
-        const db = new Dexie("Glipah");
-        db.version(1).stores({ access: "++id, ipAddress" });
-        db.access
+    db.access
+      .clear()
+      .then(() => {
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        return db.access
           .where({ ipAddress: "ab.cd.ef.gh" })
           .toArray()
           .then(addresses => {
@@ -120,6 +118,5 @@ describe.skip("2回めのアクセスのテスト", () => {
             done();
           });
       });
-    });
   });
 });
