@@ -48,6 +48,14 @@ describe("ファンクションのURLを取得する。", () => {
       done();
     });
   });
+
+  it("確認ボタンをクリックして呼び出されるメソッドを確認する", done => {
+    const accessFunction = jest.fn();
+    wrapper.setMethods({ accessFunction });
+    wrapper.find("#buttonClick").trigger("click");
+    expect(accessFunction).toHaveBeenCalledTimes(1);
+    done();
+  });
 });
 
 describe("IPアドレスの履歴の一覧表", () => {
