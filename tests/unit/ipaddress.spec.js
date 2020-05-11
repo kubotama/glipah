@@ -3,13 +3,11 @@ import flushPromises from "flush-promises";
 import { shallowMount } from "@vue/test-utils";
 import GlipahUi from "@/components/GlipahUi.vue";
 
+const clientIpHeader = { "client^ip": "zz.zz.zz.zz" };
+// const noClientIpHeader = {};
+const headerToUse = { status: 200 };
 jest.mock("axios");
-axios.get.mockImplementation(() =>
-  Promise.resolve({
-    status: 200,
-    data: { "client-ip": "zz.zz.zz.zz" }
-  })
-);
+axios.get.mockImplementation(() => Promise.resolve(headerToUse));
 
 const OriginalDate = Date;
 const dateToUse = new Date("2020-04-30 12:34:56");
@@ -23,6 +21,7 @@ describe("ファンクションのURLを取得する。", () => {
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
+    headerToUse.data = clientIpHeader;
   });
 
   it.each`
@@ -41,6 +40,21 @@ describe("ファンクションのURLを取得する。", () => {
       );
       done();
     });
+  });
+
+  it("ヘッダの属性にclient-ipがない場合", done => {
+    wrapper.vm.accessFunction().then(() => {
+      expect(wrapper.vm.ipHistory[0].ipAddress).toBe("xx.xx.xx.xx");
+      done();
+    });
+  });
+
+  it("確認ボタンをクリックして呼び出されるメソッドを確認する", done => {
+    const accessFunction = jest.fn();
+    wrapper.setMethods({ accessFunction });
+    wrapper.find("#buttonClick").trigger("click");
+    expect(accessFunction).toHaveBeenCalledTimes(1);
+    done();
   });
 });
 

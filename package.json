@@ -7,7 +7,8 @@
     "prestart": "npx netlify-lambda serve src/lambda & sleep 3",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "coverage": "yarn run test:unit -- --coverage"
   },
   "dependencies": {
     "axios": "^0.19.2",
