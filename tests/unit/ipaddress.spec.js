@@ -16,6 +16,7 @@ const dateToUse = new Date("2020-04-30 12:34:56");
 jest.spyOn(global, "Date").mockImplementation(arg => {
   return arg ? new OriginalDate(arg) : dateToUse;
 });
+Date.now = jest.fn(() => OriginalDate.now());
 
 describe("ファンクションのURLを取得する。", () => {
   let wrapper;
@@ -30,10 +31,16 @@ describe("ファンクションのURLを取得する。", () => {
     ${"https://glipah.netlify.app/"} | ${"https://glipah.netlify.app/.netlify/functions/ipaddress"}
   `("$beforeUrl -> $afterUrl", ({ beforeUrl, afterUrl }) => {
     expect(wrapper.vm.getFunctionUrl(beforeUrl)).toBe(afterUrl);
-    expect(axios.get).toBeCalledTimes(1);
-    expect(axios.get).toBeCalledWith(
-      "http://localhost:9000/.netlify/functions/ipaddress"
-    );
+  });
+
+  it("ファンクションへのアクセスを確認する", done => {
+    wrapper.vm.accessFunction().then(() => {
+      expect(axios.get).toBeCalledTimes(1);
+      expect(axios.get).toBeCalledWith(
+        "http://localhost:9000/.netlify/functions/ipaddress"
+      );
+      done();
+    });
   });
 });
 
@@ -44,35 +51,39 @@ describe("IPアドレスの履歴の一覧表", () => {
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
     table = wrapper.find("#ipHistory");
+    wrapper.vm.addIpHistory(
+      1,
+      "zz.zz.zz.zz",
+      wrapper.vm.dateToString(new Date("2020/04/30 12:34:56"))
+    );
   });
 
   it("#8のテストケース1", () => {
-    expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
-    expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
+    expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
+    expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
     expect(table.element.rows.length).toBe(2);
-    expect(table.element.rows[1].cells[0].innerHTML).toBe("zz.zz.zz.zz");
-    expect(table.element.rows[1].cells[1].innerHTML).toBe(
+    expect(table.element.rows[1].cells[1].innerHTML).toBe("zz.zz.zz.zz");
+    expect(table.element.rows[1].cells[2].innerHTML).toBe(
       "2020-04-30 12:34:56"
     );
   });
   it("#8のテストケース2", async () => {
     wrapper.vm.addIpHistory(
-      { "client-ip": "yy.yy.yy.yy" },
-      new Date("2020/05/01 11:11:11")
+      2,
+      "yy.yy.yy.yy",
+      wrapper.vm.dateToString(new Date("2020/05/01 11:11:11"))
     );
     await flushPromises();
     expect(table.element.rows.length).toBe(3);
-    expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
-    expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス日時");
-    expect(table.element.rows[1].cells[0].innerHTML).toBe("yy.yy.yy.yy");
-    expect(table.element.rows[1].cells[1].innerHTML).toBe(
+    expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
+    expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
+    expect(table.element.rows[1].cells[1].innerHTML).toBe("yy.yy.yy.yy");
+    expect(table.element.rows[1].cells[2].innerHTML).toBe(
       "2020-05-01 11:11:11"
     );
-    expect(table.element.rows[2].cells[0].innerHTML).toBe("zz.zz.zz.zz");
-    expect(table.element.rows[2].cells[1].innerHTML).toBe(
+    expect(table.element.rows[2].cells[1].innerHTML).toBe("zz.zz.zz.zz");
+    expect(table.element.rows[2].cells[2].innerHTML).toBe(
       "2020-04-30 12:34:56"
     );
   });
 });
-
-// TODO: 履歴が複数行のテストを作成する。

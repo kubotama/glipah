@@ -1,25 +1,33 @@
 <template>
   <div>
     <header><h1>Global IP Address History</h1></header>
-    <table id="ipHistory">
-      <thead>
-        <tr>
-          <th>IPアドレス</th>
-          <th>アクセス日時</th>
-        </tr>
-      </thead>
-      <tbody v-for="item in ipHistory" :key="item.ipAddress">
-        <tr>
-          <td>{{ item.ipAddress }}</td>
-          <td>{{ item.accessDate }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="button-row">
+      <button @click="onButtonClick" id="buttonClick">確認</button>
+    </div>
+    <div>
+      <table id="ipHistory">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>IPアドレス</th>
+            <th>アクセス日時</th>
+          </tr>
+        </thead>
+        <tbody v-for="item in ipHistory" :key="item.id">
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.ipAddress }}</td>
+            <td>{{ item.accessDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import Dexie from "dexie";
 
 export default {
   name: "GlipahUi",
@@ -28,21 +36,68 @@ export default {
       ipHistory: []
     };
   },
-  mounted: function() {
-    axios.get(this.getFunctionUrl(window.location.href)).then(response => {
-      this.addIpHistory(response.data, new Date());
-    });
-  },
   methods: {
+    onButtonClick() {
+      this.accessFunction();
+    },
+    loadHistory() {
+      const db = new Dexie("Glipah");
+      db.version(1).stores({ access: "++id, ipAddress" });
+      return db.access.toArray();
+    },
+    /**
+     * ファンクションにアクセスしてIPアドレスとアクセス日時をデータベースに保存する。
+     */
+    accessFunction() {
+      return axios
+        .get(this.getFunctionUrl(window.location.href))
+        .then(response => {
+          /**
+           * @type {string} アクセス元のIPアドレス
+           */
+          const ipAddress = this.getIpAddress(response.data);
+          /**
+           * @type {string} アクセスした日時
+           */
+          const accessDate = this.dateToString(new Date());
+
+          const db = new Dexie("Glipah");
+          db.version(1).stores({ access: "++id, ipAddress" });
+          return db.access
+            .add({
+              ipAddress: ipAddress,
+              accessDate: accessDate
+            })
+            .then(() => {
+              this.ipHistory = [];
+              return this.loadHistory().then(addresses => {
+                addresses.forEach(address => {
+                  this.addIpHistory(
+                    address.id,
+                    address.ipAddress,
+                    address.accessDate
+                  );
+                });
+              });
+            });
+        })
+        .catch(error => {
+          return new Promise(() => {
+            console.log("get: ", error);
+          });
+        });
+    },
     /**
      * ipHistory配列の先頭にIPアドレスとアクセス日時を追加する。
-     * @param {json} headers アクセス元のIPアドレス
-     * @param {Date} date アクセスした日時
+     * @param {integer} id データベース項目のid
+     * @param {string} ipAddress アクセス元のIPアドレス
+     * @param {string} accessDate アクセスした日時
      */
-    addIpHistory(headers, date) {
+    addIpHistory(id, ipAddress, accessDate) {
       this.ipHistory.unshift({
-        ipAddress: this.getIpAddress(headers),
-        accessDate: this.dateToString(date)
+        id: id,
+        ipAddress: ipAddress,
+        accessDate: accessDate
       });
     },
 
@@ -85,12 +140,16 @@ export default {
     },
 
     getFunctionUrl(pageUrl) {
-      const url = new URL(pageUrl);
-      if (url.port == 8080) {
-        url.port = 9000;
+      try {
+        const url = new URL(pageUrl);
+        if (url.port == 8080) {
+          url.port = 9000;
+        }
+        url.pathname = ".netlify/functions/ipaddress";
+        return url.href;
+      } catch (e) {
+        console.log(e);
       }
-      url.pathname = ".netlify/functions/ipaddress";
-      return url.href;
     }
   }
 };
@@ -101,7 +160,7 @@ export default {
 table {
   margin-left: auto;
   margin-right: auto;
-  margin-top: -1em;
+  margin-top: 1em;
   border-collapse: collapse;
 }
 td,
@@ -112,5 +171,9 @@ th {
 }
 h1 {
   text-align: center;
+}
+.button-row {
+  text-align: center;
+  margin-top: -1em;
 }
 </style>

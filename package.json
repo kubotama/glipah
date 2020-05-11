@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "dexie": "^3.0.0",
     "vue": "^2.6.11"
   },
   "devDependencies": {
@@ -25,6 +26,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-vue": "^6.2.2",
+    "fake-indexeddb": "^3.0.0",
     "flush-promises": "^1.0.2",
     "netlify-lambda": "^1.6.3",
     "prettier": "^1.19.1",
