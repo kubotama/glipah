@@ -42,8 +42,13 @@ export default {
     },
     loadHistory() {
       const db = new Dexie("Glipah");
+      this.ipHistory = [];
       db.version(1).stores({ access: "++id, ipAddress" });
-      return db.access.toArray();
+      return db.access.toArray().then(addresses => {
+        addresses.forEach(address => {
+          this.addIpHistory(address.id, address.ipAddress, address.accessDate);
+        });
+      });
     },
     /**
      * ファンクションにアクセスしてIPアドレスとアクセス日時をデータベースに保存する。
@@ -69,16 +74,7 @@ export default {
               accessDate: accessDate
             })
             .then(() => {
-              this.ipHistory = [];
-              return this.loadHistory().then(addresses => {
-                addresses.forEach(address => {
-                  this.addIpHistory(
-                    address.id,
-                    address.ipAddress,
-                    address.accessDate
-                  );
-                });
-              });
+              return this.loadHistory();
             });
         })
         .catch(error => {
