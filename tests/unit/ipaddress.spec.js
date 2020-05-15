@@ -111,14 +111,6 @@ describe("異常系", () => {
 
   it("ファンクションにアクセスできない場合", async () => {
     axios.get.mockRejectedValue(new Error("Network Error."));
-    await expect(
-      wrapper.vm.accessFunction()
-      // .then(() => {
-      //   throw new Error("実行されないはず");
-      // })
-      // .catch(() => {
-      //   // expect(error).toThrowError("Network Error.");
-      // })
-    ).rejects.toThrow("Network Error.");
+    await expect(wrapper.vm.accessFunction()).rejects.toThrow("Network Error.");
   });
 });
