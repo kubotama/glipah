@@ -144,6 +144,7 @@ export default {
         return url.href;
       } catch (e) {
         console.log(e);
+        throw e;
       }
     }
   }

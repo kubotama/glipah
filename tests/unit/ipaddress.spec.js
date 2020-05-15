@@ -115,6 +115,8 @@ describe("異常系", () => {
   });
 
   it("#27: webページのURLを正しく取得できない場合", () => {
-    expect(wrapper.vm.getFunctionUrl("xxx")).toThrow("URL Error");
+    expect(() => {
+      wrapper.vm.getFunctionUrl("xxx");
+    }).toThrow("Invalid URL:");
   });
 });
