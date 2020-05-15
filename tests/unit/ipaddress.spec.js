@@ -113,4 +113,8 @@ describe("異常系", () => {
     axios.get.mockRejectedValue(new Error("Network Error."));
     await expect(wrapper.vm.accessFunction()).rejects.toThrow("Network Error.");
   });
+
+  it("#27: webページのURLを正しく取得できない場合", () => {
+    expect(wrapper.vm.getFunctionUrl("xxx")).toThrow("URL Error");
+  });
 });
