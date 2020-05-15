@@ -101,3 +101,24 @@ describe("IPアドレスの履歴の一覧表", () => {
     );
   });
 });
+
+describe("異常系", () => {
+  let wrapper;
+
+  beforeEach(() => {
+    wrapper = shallowMount(GlipahUi);
+  });
+
+  it("ファンクションにアクセスできない場合", async () => {
+    axios.get.mockRejectedValue(new Error("Network Error."));
+    await expect(
+      wrapper.vm.accessFunction()
+      // .then(() => {
+      //   throw new Error("実行されないはず");
+      // })
+      // .catch(() => {
+      //   // expect(error).toThrowError("Network Error.");
+      // })
+    ).rejects.toThrow("Network Error.");
+  });
+});
