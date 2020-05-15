@@ -78,9 +78,11 @@ export default {
             });
         })
         .catch(error => {
-          return new Promise(() => {
-            console.log("get: ", error);
-          });
+          // return new Promise(() => {
+          //   console.log("get: ", error);
+          // });
+          console.log("get: ", error);
+          throw error;
         });
     },
     /**
