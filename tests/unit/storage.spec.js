@@ -70,7 +70,7 @@ describe("初回アクセスのテスト", () => {
       });
   });
 
-  it("保存されているデータが表示されていることを確認する。", done => {
+  it.skip("保存されているデータが表示されていることを確認する。", done => {
     db.access.clear().then(() => {
       wrapper.vm.accessFunction().then(() => {
         const table = wrapper.find("#ipHistory");
@@ -97,7 +97,7 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
     db.version(1).stores({ access: "++id, ipAddress" });
   });
 
-  it("保存されているデータが2件であることを確認する。", done => {
+  it.skip("保存されているデータが2件であることを確認する。", done => {
     db.access
       .clear()
       .then(() => {
@@ -121,7 +121,7 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
       });
   });
 
-  it("保存されているデータが表示されていることを確認する。", done => {
+  it.skip("保存されているデータが表示されていることを確認する。", done => {
     db.access
       .clear()
       .then(() => {
@@ -157,7 +157,7 @@ describe("2回めのアクセス(違うIPアドレス)のテスト", () => {
     db.version(1).stores({ access: "++id, ipAddress" });
   });
 
-  it("保存されているデータが2件であることを確認する。", done => {
+  it.skip("保存されているデータが2件であることを確認する。", done => {
     db.access
       .clear()
       .then(() => {
@@ -182,7 +182,7 @@ describe("2回めのアクセス(違うIPアドレス)のテスト", () => {
       });
   });
 
-  it("保存されているデータが表示されていることを確認する", done => {
+  it.skip("保存されているデータが表示されていることを確認する", done => {
     db.access
       .clear()
       .then(() => {

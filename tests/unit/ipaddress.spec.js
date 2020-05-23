@@ -72,7 +72,7 @@ describe("IPアドレスの履歴の一覧表", () => {
     );
   });
 
-  it("#8のテストケース1", () => {
+  it.skip("#8のテストケース1", () => {
     expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
     expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
     expect(table.element.rows.length).toBe(2);
@@ -81,7 +81,7 @@ describe("IPアドレスの履歴の一覧表", () => {
       "2020-04-30 12:34:56"
     );
   });
-  it("#8のテストケース2", async () => {
+  it.skip("#8のテストケース2", async () => {
     wrapper.vm.addIpHistory(
       2,
       "yy.yy.yy.yy",
