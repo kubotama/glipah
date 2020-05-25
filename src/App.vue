@@ -1,17 +1,17 @@
 <template>
   <v-app>
-    <HelloWorld />
+    <GlipahUi />
   </v-app>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+import GlipahUi from "./components/GlipahUi";
 
 export default {
   name: "App",
 
   components: {
-    HelloWorld
+    GlipahUi
   },
 
   data: () => ({
