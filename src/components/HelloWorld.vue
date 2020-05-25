@@ -1,5 +1,27 @@
 <template>
   <div>
+    <header><h1>Global IP Address History</h1></header>
+    <div class="button-row">
+      <button @click="onButtonClick" id="buttonClick">確認</button>
+    </div>
+    <div>
+      <table id="ipHistory">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>IPアドレス</th>
+            <th>アクセス日時</th>
+          </tr>
+        </thead>
+        <tbody v-for="item in ipHistory" :key="item.id">
+          <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.ipAddress }}</td>
+            <td>{{ item.accessDate }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
     <v-dialog v-model="dialog" width="500">
       <template v-slot:activator="{ on }">
         <v-btn color="black" dark v-on="on" outlined="true">
@@ -96,3 +118,26 @@ export default {
   })
 };
 </script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+table {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1em;
+  border-collapse: collapse;
+}
+td,
+th {
+  border: 1px solid;
+  margin: 0;
+  padding: 0.2em 3em;
+}
+h1 {
+  text-align: center;
+}
+.button-row {
+  text-align: center;
+  margin-top: -1em;
+}
+</style>
