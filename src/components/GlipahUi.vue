@@ -39,10 +39,13 @@
           この機能はCookieを無効にすることで収集を拒否することが出来ますので、お使いのブラウザの設定をご確認ください。
           この規約に関しての詳細は<a
             href="https://marketingplatform.google.com/about/analytics/terms/jp/"
+            target="”_blank”"
           >
             Googleアナリティクスサービス利用規約のページ </a
           >や
-          <a href="https://policies.google.com/technologies/ads?hl=ja"
+          <a
+            href="https://policies.google.com/technologies/ads?hl=ja"
+            target="”_blank”"
             >Googleポリシーと規約ページ</a
           >をご覧ください。
         </v-card-text>
