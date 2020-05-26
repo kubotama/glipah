@@ -24,7 +24,7 @@
     </div>
     <v-dialog v-model="dialog" width="500">
       <template v-slot:activator="{ on }">
-        <v-btn color="black" dark v-on="on" outlined="true">
+        <v-btn color="black" dark v-on="on" outlined>
           プライバシーポリシー
         </v-btn>
       </template>
