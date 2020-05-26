@@ -1,8 +1,9 @@
 module.exports = {
   pages: {
     index: {
-      entry: "src/main.js", // 必須パラメータ
+      entry: "src/main.js",
       title: "GLIPAH: Global IP Address History"
     }
-  }
+  },
+  transpileDependencies: ["vuetify"]
 };

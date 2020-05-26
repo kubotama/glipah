@@ -109,9 +109,9 @@ describe("異常系", () => {
     wrapper = shallowMount(GlipahUi);
   });
 
-  it("ファンクションにアクセスできない場合", async () => {
+  it("ファンクションにアクセスできない場合", () => {
     axios.get.mockRejectedValue(new Error("Network Error."));
-    await expect(wrapper.vm.accessFunction()).rejects.toThrow("Network Error.");
+    expect(wrapper.vm.accessFunction()).rejects.toThrow("Network Error.");
   });
 
   it("#27: webページのURLを正しく取得できない場合", () => {

@@ -1,18 +1,21 @@
 <template>
-  <div id="app">
+  <v-app>
     <GlipahUi />
-  </div>
+  </v-app>
 </template>
 
 <script>
-import GlipahUi from "./components/GlipahUi.vue";
+import GlipahUi from "./components/GlipahUi";
 
 export default {
   name: "App",
+
   components: {
     GlipahUi
-  }
+  },
+
+  data: () => ({
+    //
+  })
 };
 </script>
-
-<style></style>
