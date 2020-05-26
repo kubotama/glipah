@@ -2,7 +2,9 @@
   <div>
     <header><h1>Global IP Address History</h1></header>
     <div class="button-row">
-      <button @click="onButtonClick" id="buttonClick">確認</button>
+      <button @click="onButtonClick" id="buttonClick" class="button-click">
+        確認
+      </button>
     </div>
     <div>
       <table id="ipHistory">
@@ -26,7 +28,7 @@
     <div class="text-right dialog-privacy">
       <v-dialog v-model="dialog" width="500">
         <template v-slot:activator="{ on }">
-          <v-btn color="black" dark v-on="on" outlined id="buttonPrivacy">
+          <v-btn color="black" dark v-on="on" outlined class="button-privacy">
             プライバシーポリシー
           </v-btn>
         </template>
@@ -209,7 +211,7 @@ h1 {
   border-style: solid;
   padding: 2pt;
 }
-#buttonPrivacy {
+.button-privacy {
   margin-left: auto;
   margin-right: 0px;
 }
