@@ -72,7 +72,8 @@ export default {
 
   data() {
     return {
-      ipHistory: []
+      ipHistory: [],
+      dialog: false
     };
   },
   methods: {
