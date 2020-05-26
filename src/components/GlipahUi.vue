@@ -112,10 +112,6 @@ export default {
             .then(() => {
               return this.loadHistory();
             });
-        })
-        .catch(error => {
-          console.log("get: ", error);
-          throw error;
         });
     },
     /**
@@ -171,17 +167,12 @@ export default {
     },
 
     getFunctionUrl(pageUrl) {
-      try {
-        const url = new URL(pageUrl);
-        if (url.port == 8080) {
-          url.port = 9000;
-        }
-        url.pathname = ".netlify/functions/ipaddress";
-        return url.href;
-      } catch (e) {
-        console.log(e);
-        throw e;
+      const url = new URL(pageUrl);
+      if (url.port == 8080) {
+        url.port = 9000;
       }
+      url.pathname = ".netlify/functions/ipaddress";
+      return url.href;
     }
   }
 };
