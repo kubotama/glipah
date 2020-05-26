@@ -32,7 +32,7 @@ jest.spyOn(global, "Date").mockImplementation(arg => {
 });
 Date.now = jest.fn(() => OriginalDate.now());
 
-describe.skip("初回アクセスのテスト", () => {
+describe("初回アクセスのテスト", () => {
   let wrapper;
   let db;
 
@@ -87,7 +87,7 @@ describe.skip("初回アクセスのテスト", () => {
   });
 });
 
-describe.skip("2回めのアクセス(同じIPアドレス)のテスト", () => {
+describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
   let wrapper;
   let db;
 
@@ -147,7 +147,7 @@ describe.skip("2回めのアクセス(同じIPアドレス)のテスト", () => 
   });
 });
 
-describe.skip("2回めのアクセス(違うIPアドレス)のテスト", () => {
+describe("2回めのアクセス(違うIPアドレス)のテスト", () => {
   let wrapper;
   let db;
 
