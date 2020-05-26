@@ -201,4 +201,8 @@ h1 {
 .button-row {
   text-align: center;
 }
+#buttonClick {
+  border-style: solid;
+  padding: 2pt;
+}
 </style>
