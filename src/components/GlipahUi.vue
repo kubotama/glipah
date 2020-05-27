@@ -2,9 +2,13 @@
   <div>
     <header><h1>Global IP Address History</h1></header>
     <div class="button-row">
-      <button @click="onButtonClick" id="buttonClick" class="button-click">
+      <v-btn
+        @click.native="onButtonClick"
+        id="buttonClick"
+        class="button-click"
+      >
         確認
-      </button>
+      </v-btn>
     </div>
     <div>
       <table id="ipHistory">
@@ -207,9 +211,8 @@ h1 {
 .button-row {
   text-align: center;
 }
-#buttonClick {
+.button-click {
   border-style: solid;
-  padding: 2pt;
 }
 .button-privacy {
   margin-left: auto;
