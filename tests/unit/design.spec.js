@@ -2,7 +2,7 @@ import axios from "axios";
 import cheerio from "cheerio";
 
 describe("画面のデザインを改善する。 #11", () => {
-  it("タイトルがGLIPAH: Global IP Address Historyであることを確認する。", async () => {
+  it.skip("タイトルがGLIPAH: Global IP Address Historyであることを確認する。", async () => {
     await axios.get("http://localhost:8080").then(response => {
       expect(
         cheerio
