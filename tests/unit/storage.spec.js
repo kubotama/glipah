@@ -16,7 +16,7 @@ global.IDBRequest = require("fake-indexeddb/lib/FDBRequest");
 global.IDBTransaction = require("fake-indexeddb/lib/FDBTransaction");
 global.IDBVersionChangeEvent = require("fake-indexeddb/lib/FDBVersionChangeEvent");
 
-let ipToUse = "ab.cd.ef.gh";
+let ipToUse = "";
 jest.mock("axios");
 axios.get.mockImplementation(() =>
   Promise.resolve({
@@ -26,7 +26,7 @@ axios.get.mockImplementation(() =>
 );
 
 const OriginalDate = Date;
-let dateToUse = new Date("2020-05-06 01:02:03");
+let dateToUse = null;
 jest.spyOn(global, "Date").mockImplementation(arg => {
   return arg ? new OriginalDate(arg) : dateToUse;
 });
@@ -43,6 +43,7 @@ describe("初回アクセスのテスト", () => {
   });
 
   it("データベースが存在することを確認する。", done => {
+    dateToUse = new Date("2020-05-06 01:02:03");
     wrapper.vm.accessFunction().then(() => {
       Dexie.exists("Glipah").then(exists => {
         expect(exists).toBeTruthy();
@@ -55,6 +56,8 @@ describe("初回アクセスのテスト", () => {
     db.access
       .clear()
       .then(() => {
+        dateToUse = new Date("2020-05-06 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
         return wrapper.vm.accessFunction();
       })
       .then(() => {
@@ -72,6 +75,8 @@ describe("初回アクセスのテスト", () => {
 
   it.skip("保存されているデータが表示されていることを確認する。", done => {
     db.access.clear().then(() => {
+      dateToUse = new Date("2020-05-6 01:02:03");
+      ipToUse = "ab.cd.ef.gh";
       wrapper.vm.accessFunction().then(() => {
         const table = wrapper.find("#ipHistory");
         expect(table.element.rows.length).toBe(2);
@@ -101,6 +106,8 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
     db.access
       .clear()
       .then(() => {
+        dateToUse = new Date("2020-05-06 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
         return wrapper.vm.accessFunction();
       })
       .then(() => {
@@ -126,6 +133,8 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
     db.access
       .clear()
       .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
         return wrapper.vm.accessFunction();
       })
       .then(() => {
