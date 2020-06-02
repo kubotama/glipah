@@ -104,6 +104,7 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
         return wrapper.vm.accessFunction();
       })
       .then(() => {
+        dateToUse = new Date("2020-05-07 03:49:38");
         return wrapper.vm.accessFunction();
       })
       .then(() => {
@@ -115,7 +116,7 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
             expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
             expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
             expect(addresses[1].ipAddress).toBe("ab.cd.ef.gh");
-            expect(addresses[1].accessDate).toBe("2020-05-06 01:02:03");
+            expect(addresses[1].accessDate).toBe("2020-05-07 03:49:38");
             done();
           });
       });
@@ -128,6 +129,7 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
         return wrapper.vm.accessFunction();
       })
       .then(() => {
+        dateToUse = new Date("2020-05-07 03:49:38");
         wrapper.vm.accessFunction().then(() => {
           const table = wrapper.find("#ipHistory");
           expect(table.element.rows.length).toBe(3);
@@ -135,7 +137,7 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
           expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
           expect(table.element.rows[1].cells[1].innerHTML).toBe("ab.cd.ef.gh");
           expect(table.element.rows[1].cells[2].innerHTML).toBe(
-            "2020-05-06 01:02:03"
+            "2020-05-07 03:49:38"
           );
           expect(table.element.rows[2].cells[1].innerHTML).toBe("ab.cd.ef.gh");
           expect(table.element.rows[2].cells[2].innerHTML).toBe(
