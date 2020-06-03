@@ -20,11 +20,19 @@
             <th>最新のアクセス日時</th>
           </tr>
         </thead>
-        <tbody v-for="item in ipHistory" :key="item.id">
+        <!-- <tbody v-for="item in ipHistory" :key="item.id">
           <tr>
             <td>{{ item.id }}</td>
             <td>{{ item.ipAddress }}</td>
             <td>{{ item.accessDate }}</td>
+          </tr>
+        </tbody> -->
+        <tbody>
+          <tr>
+            <td>ab.cd.ef.gh</td>
+            <td>1</td>
+            <td>2020-05-06 01:02:03</td>
+            <td>2020-05-06 01:02:03</td>
           </tr>
         </tbody>
       </table>
