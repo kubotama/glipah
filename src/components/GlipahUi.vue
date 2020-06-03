@@ -15,9 +15,9 @@
         <thead>
           <tr>
             <th>IPアドレス</th>
-            <th>IPアドレス</th>
-            <th>アクセス日時</th>
-            <th>アクセス日時</th>
+            <th>アクセス回数</th>
+            <th>初回のアクセス日時</th>
+            <th>最新のアクセス日時</th>
           </tr>
         </thead>
         <tbody v-for="item in ipHistory" :key="item.id">
