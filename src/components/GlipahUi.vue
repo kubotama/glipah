@@ -20,7 +20,7 @@
             <th>最新のアクセス日時</th>
           </tr>
         </thead>
-        <tbody v-for="item in ipHistory" :key="item.id">
+        <tbody v-for="item in ipHistory" :key="item.ipAddress">
           <tr>
             <td>{{ item.ipAddress }}</td>
             <td>{{ item.accessCount }}</td>
