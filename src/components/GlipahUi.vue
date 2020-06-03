@@ -14,8 +14,9 @@
       <table id="ipHistory">
         <thead>
           <tr>
-            <th>id</th>
             <th>IPアドレス</th>
+            <th>IPアドレス</th>
+            <th>アクセス日時</th>
             <th>アクセス日時</th>
           </tr>
         </thead>
