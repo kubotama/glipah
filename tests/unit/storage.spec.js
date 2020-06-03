@@ -102,6 +102,36 @@ describe("初回アクセスのテスト", () => {
       });
     });
   });
+
+  it("保存されているデータが表示されていることを確認する: テストケース1.1", done => {
+    db.access.clear().then(() => {
+      dateToUse = new Date("2020/06/03 21:32:08");
+      ipToUse = "203.0.113.11";
+      wrapper.vm.accessFunction().then(() => {
+        const table = wrapper.find("#ipHistory");
+        expect(table.element.rows.length).toBe(2);
+        expect(table.element.rows[0].cells.length).toBe(4);
+        expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+        expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+        expect(table.element.rows[0].cells[2].innerHTML).toBe(
+          "初回のアクセス日時"
+        );
+        expect(table.element.rows[0].cells[3].innerHTML).toBe(
+          "最新のアクセス日時"
+        );
+        expect(table.element.rows[1].cells.length).toBe(4);
+        expect(table.element.rows[1].cells[0].innerHTML).toBe("203.0.113.11");
+        expect(table.element.rows[1].cells[1].innerHTML).toBe("1");
+        expect(table.element.rows[1].cells[2].innerHTML).toBe(
+          "2020-06-03 21:32:08"
+        );
+        expect(table.element.rows[1].cells[3].innerHTML).toBe(
+          "2020-06-03 21:32:08"
+        );
+        done();
+      });
+    });
+  });
 });
 
 describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
