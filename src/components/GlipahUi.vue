@@ -136,13 +136,26 @@ export default {
      * @param {string} accessDate アクセスした日時
      */
     addIpHistory(id, ipAddress, accessDate) {
-      this.ipHistory.unshift({
-        id: id,
-        ipAddress: ipAddress,
-        accessCount: 1,
-        firstAccessDate: accessDate,
-        lastAccessDate: accessDate
-      });
+      const index = this.ipHistory.findIndex(
+        address => address.ipAddress === ipAddress
+      );
+      if (index == -1) {
+        this.ipHistory.unshift({
+          id: id,
+          ipAddress: ipAddress,
+          accessCount: 1,
+          firstAccessDate: accessDate,
+          lastAccessDate: accessDate
+        });
+      } else {
+        if (this.ipHistory[index].firstAccessDate > accessDate) {
+          this.ipHistory[index].firstAccessDate = accessDate;
+        }
+        if (this.ipHistory[index].lastAccessDate < accessDate) {
+          this.ipHistory[index].lastAccessDate = accessDate;
+        }
+        this.ipHistory[index].accessCount++;
+      }
     },
 
     /**
