@@ -1,5 +1,4 @@
 import axios from "axios";
-import flushPromises from "flush-promises";
 import { shallowMount } from "@vue/test-utils";
 import GlipahUi from "@/components/GlipahUi.vue";
 
@@ -60,44 +59,13 @@ describe("ファンクションのURLを取得する。", () => {
 
 describe("IPアドレスの履歴の一覧表", () => {
   let wrapper;
-  let table;
 
   beforeEach(() => {
     wrapper = shallowMount(GlipahUi);
-    table = wrapper.find("#ipHistory");
     wrapper.vm.addIpHistory(
       1,
       "zz.zz.zz.zz",
       wrapper.vm.dateToString(new Date("2020/04/30 12:34:56"))
-    );
-  });
-
-  it.skip("#8のテストケース1", () => {
-    expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
-    expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
-    expect(table.element.rows.length).toBe(2);
-    expect(table.element.rows[1].cells[1].innerHTML).toBe("zz.zz.zz.zz");
-    expect(table.element.rows[1].cells[2].innerHTML).toBe(
-      "2020-04-30 12:34:56"
-    );
-  });
-  it.skip("#8のテストケース2", async () => {
-    wrapper.vm.addIpHistory(
-      2,
-      "yy.yy.yy.yy",
-      wrapper.vm.dateToString(new Date("2020/05/01 11:11:11"))
-    );
-    await flushPromises();
-    expect(table.element.rows.length).toBe(3);
-    expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
-    expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
-    expect(table.element.rows[1].cells[1].innerHTML).toBe("yy.yy.yy.yy");
-    expect(table.element.rows[1].cells[2].innerHTML).toBe(
-      "2020-05-01 11:11:11"
-    );
-    expect(table.element.rows[2].cells[1].innerHTML).toBe("zz.zz.zz.zz");
-    expect(table.element.rows[2].cells[2].innerHTML).toBe(
-      "2020-04-30 12:34:56"
     );
   });
 });
