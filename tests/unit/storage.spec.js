@@ -16,7 +16,7 @@ global.IDBRequest = require("fake-indexeddb/lib/FDBRequest");
 global.IDBTransaction = require("fake-indexeddb/lib/FDBTransaction");
 global.IDBVersionChangeEvent = require("fake-indexeddb/lib/FDBVersionChangeEvent");
 
-let ipToUse = "ab.cd.ef.gh";
+let ipToUse = "";
 jest.mock("axios");
 axios.get.mockImplementation(() =>
   Promise.resolve({
@@ -26,7 +26,7 @@ axios.get.mockImplementation(() =>
 );
 
 const OriginalDate = Date;
-let dateToUse = new Date("2020-05-06 01:02:03");
+let dateToUse = null;
 jest.spyOn(global, "Date").mockImplementation(arg => {
   return arg ? new OriginalDate(arg) : dateToUse;
 });
@@ -43,6 +43,7 @@ describe("初回アクセスのテスト", () => {
   });
 
   it("データベースが存在することを確認する。", done => {
+    dateToUse = new Date("2020-05-06 01:02:03");
     wrapper.vm.accessFunction().then(() => {
       Dexie.exists("Glipah").then(exists => {
         expect(exists).toBeTruthy();
@@ -55,6 +56,8 @@ describe("初回アクセスのテスト", () => {
     db.access
       .clear()
       .then(() => {
+        dateToUse = new Date("2020-05-06 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
         return wrapper.vm.accessFunction();
       })
       .then(() => {
@@ -70,16 +73,60 @@ describe("初回アクセスのテスト", () => {
       });
   });
 
-  it("保存されているデータが表示されていることを確認する。", done => {
+  it("保存されているデータが表示されていることを確認する: テストケース3", done => {
     db.access.clear().then(() => {
+      dateToUse = new Date("2020-05-6 01:02:03");
+      ipToUse = "ab.cd.ef.gh";
       wrapper.vm.accessFunction().then(() => {
         const table = wrapper.find("#ipHistory");
         expect(table.element.rows.length).toBe(2);
-        expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
-        expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
-        expect(table.element.rows[1].cells[1].innerHTML).toBe("ab.cd.ef.gh");
+        expect(table.element.rows[0].cells.length).toBe(4);
+        expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+        expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+        expect(table.element.rows[0].cells[2].innerHTML).toBe(
+          "初回のアクセス日時"
+        );
+        expect(table.element.rows[0].cells[3].innerHTML).toBe(
+          "最新のアクセス日時"
+        );
+        expect(table.element.rows[1].cells.length).toBe(4);
+        expect(table.element.rows[1].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+        expect(table.element.rows[1].cells[1].innerHTML).toBe("1");
         expect(table.element.rows[1].cells[2].innerHTML).toBe(
           "2020-05-06 01:02:03"
+        );
+        expect(table.element.rows[1].cells[3].innerHTML).toBe(
+          "2020-05-06 01:02:03"
+        );
+        done();
+      });
+    });
+  });
+
+  it("保存されているデータが表示されていることを確認する: テストケース3.1", done => {
+    db.access.clear().then(() => {
+      dateToUse = new Date("2020/06/03 21:32:08");
+      ipToUse = "203.0.113.11";
+      wrapper.vm.accessFunction().then(() => {
+        const table = wrapper.find("#ipHistory");
+        expect(table.element.rows.length).toBe(2);
+        expect(table.element.rows[0].cells.length).toBe(4);
+        expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+        expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+        expect(table.element.rows[0].cells[2].innerHTML).toBe(
+          "初回のアクセス日時"
+        );
+        expect(table.element.rows[0].cells[3].innerHTML).toBe(
+          "最新のアクセス日時"
+        );
+        expect(table.element.rows[1].cells.length).toBe(4);
+        expect(table.element.rows[1].cells[0].innerHTML).toBe("203.0.113.11");
+        expect(table.element.rows[1].cells[1].innerHTML).toBe("1");
+        expect(table.element.rows[1].cells[2].innerHTML).toBe(
+          "2020-06-03 21:32:08"
+        );
+        expect(table.element.rows[1].cells[3].innerHTML).toBe(
+          "2020-06-03 21:32:08"
         );
         done();
       });
@@ -101,9 +148,12 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
     db.access
       .clear()
       .then(() => {
+        dateToUse = new Date("2020-05-06 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
         return wrapper.vm.accessFunction();
       })
       .then(() => {
+        dateToUse = new Date("2020-05-07 03:49:38");
         return wrapper.vm.accessFunction();
       })
       .then(() => {
@@ -115,31 +165,42 @@ describe("2回めのアクセス(同じIPアドレス)のテスト", () => {
             expect(addresses[0].ipAddress).toBe("ab.cd.ef.gh");
             expect(addresses[0].accessDate).toBe("2020-05-06 01:02:03");
             expect(addresses[1].ipAddress).toBe("ab.cd.ef.gh");
-            expect(addresses[1].accessDate).toBe("2020-05-06 01:02:03");
+            expect(addresses[1].accessDate).toBe("2020-05-07 03:49:38");
             done();
           });
       });
   });
 
-  it("保存されているデータが表示されていることを確認する。", done => {
+  it("保存されているデータが表示されていることを確認する。: テストケース4", done => {
     db.access
       .clear()
       .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
         return wrapper.vm.accessFunction();
       })
       .then(() => {
+        dateToUse = new Date("2020-05-07 03:49:38");
         wrapper.vm.accessFunction().then(() => {
           const table = wrapper.find("#ipHistory");
-          expect(table.element.rows.length).toBe(3);
-          expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
-          expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
-          expect(table.element.rows[1].cells[1].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows.length).toBe(2);
+          expect(table.element.rows[0].cells.length).toBe(4);
+          expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+          expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+          expect(table.element.rows[0].cells[2].innerHTML).toBe(
+            "初回のアクセス日時"
+          );
+          expect(table.element.rows[0].cells[3].innerHTML).toBe(
+            "最新のアクセス日時"
+          );
+          expect(table.element.rows[1].cells.length).toBe(4);
+          expect(table.element.rows[1].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[1].cells[1].innerHTML).toBe("2");
           expect(table.element.rows[1].cells[2].innerHTML).toBe(
             "2020-05-06 01:02:03"
           );
-          expect(table.element.rows[2].cells[1].innerHTML).toBe("ab.cd.ef.gh");
-          expect(table.element.rows[2].cells[2].innerHTML).toBe(
-            "2020-05-06 01:02:03"
+          expect(table.element.rows[1].cells[3].innerHTML).toBe(
+            "2020-05-07 03:49:38"
           );
           done();
         });
@@ -182,7 +243,7 @@ describe("2回めのアクセス(違うIPアドレス)のテスト", () => {
       });
   });
 
-  it("保存されているデータが表示されていることを確認する", done => {
+  it("保存されているデータが表示されていることを確認する: テストケース5", done => {
     db.access
       .clear()
       .then(() => {
@@ -196,15 +257,254 @@ describe("2回めのアクセス(違うIPアドレス)のテスト", () => {
         wrapper.vm.accessFunction().then(() => {
           const table = wrapper.find("#ipHistory");
           expect(table.element.rows.length).toBe(3);
-          expect(table.element.rows[0].cells[1].innerHTML).toBe("IPアドレス");
-          expect(table.element.rows[0].cells[2].innerHTML).toBe("アクセス日時");
-          expect(table.element.rows[1].cells[1].innerHTML).toBe("11.22.33.44");
+          expect(table.element.rows[0].cells.length).toBe(4);
+          expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+          expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+          expect(table.element.rows[0].cells[2].innerHTML).toBe(
+            "初回のアクセス日時"
+          );
+          expect(table.element.rows[0].cells[3].innerHTML).toBe(
+            "最新のアクセス日時"
+          );
+          expect(table.element.rows[1].cells[0].innerHTML).toBe("11.22.33.44");
+          expect(table.element.rows[1].cells[1].innerHTML).toBe("1");
           expect(table.element.rows[1].cells[2].innerHTML).toBe(
             "2020-05-10 00:11:22"
           );
-          expect(table.element.rows[2].cells[1].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[1].cells[3].innerHTML).toBe(
+            "2020-05-10 00:11:22"
+          );
+          expect(table.element.rows[2].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[2].cells[1].innerHTML).toBe("1");
           expect(table.element.rows[2].cells[2].innerHTML).toBe(
             "2020-05-06 01:02:03"
+          );
+          expect(table.element.rows[2].cells[3].innerHTML).toBe(
+            "2020-05-06 01:02:03"
+          );
+          done();
+        });
+      });
+  });
+
+  it("3回とも同じIPアドレスからのアクセス、日時の順にアクセスされています。: テストケース6", done => {
+    db.access
+      .clear()
+      .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-05-21 07:23:39");
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-06-01 22:11:00");
+        wrapper.vm.accessFunction().then(() => {
+          const table = wrapper.find("#ipHistory");
+          expect(table.element.rows.length).toBe(2);
+          expect(table.element.rows[0].cells.length).toBe(4);
+          expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+          expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+          expect(table.element.rows[0].cells[2].innerHTML).toBe(
+            "初回のアクセス日時"
+          );
+          expect(table.element.rows[0].cells[3].innerHTML).toBe(
+            "最新のアクセス日時"
+          );
+          expect(table.element.rows[1].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[1].cells[1].innerHTML).toBe("3");
+          expect(table.element.rows[1].cells[2].innerHTML).toBe(
+            "2020-05-06 01:02:03"
+          );
+          expect(table.element.rows[1].cells[3].innerHTML).toBe(
+            "2020-06-01 22:11:00"
+          );
+          done();
+        });
+      });
+  });
+
+  it("3回とも同じIPアドレスからのアクセス、アクセスの順序が入れ替わっています。: テストケース7", done => {
+    db.access
+      .clear()
+      .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-06-01 22:11:00");
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-05-21 07:23:39");
+        wrapper.vm.accessFunction().then(() => {
+          const table = wrapper.find("#ipHistory");
+          expect(table.element.rows.length).toBe(2);
+          expect(table.element.rows[0].cells.length).toBe(4);
+          expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+          expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+          expect(table.element.rows[0].cells[2].innerHTML).toBe(
+            "初回のアクセス日時"
+          );
+          expect(table.element.rows[0].cells[3].innerHTML).toBe(
+            "最新のアクセス日時"
+          );
+          expect(table.element.rows[1].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[1].cells[1].innerHTML).toBe("3");
+          expect(table.element.rows[1].cells[2].innerHTML).toBe(
+            "2020-05-06 01:02:03"
+          );
+          expect(table.element.rows[1].cells[3].innerHTML).toBe(
+            "2020-06-01 22:11:00"
+          );
+          done();
+        });
+      });
+  });
+
+  it("3回目に別のIPアドレスからアクセスされています。: テストケース8", done => {
+    db.access
+      .clear()
+      .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-06-01 22:11:00");
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-06-10 00:11:22");
+        ipToUse = "11.22.33.44";
+        wrapper.vm.accessFunction().then(() => {
+          const table = wrapper.find("#ipHistory");
+          expect(table.element.rows.length).toBe(3);
+          expect(table.element.rows[0].cells.length).toBe(4);
+          expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+          expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+          expect(table.element.rows[0].cells[2].innerHTML).toBe(
+            "初回のアクセス日時"
+          );
+          expect(table.element.rows[0].cells[3].innerHTML).toBe(
+            "最新のアクセス日時"
+          );
+          expect(table.element.rows[1].cells[0].innerHTML).toBe("11.22.33.44");
+          expect(table.element.rows[1].cells[1].innerHTML).toBe("1");
+          expect(table.element.rows[1].cells[2].innerHTML).toBe(
+            "2020-06-10 00:11:22"
+          );
+          expect(table.element.rows[1].cells[3].innerHTML).toBe(
+            "2020-06-10 00:11:22"
+          );
+          expect(table.element.rows[2].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[2].cells[1].innerHTML).toBe("2");
+          expect(table.element.rows[2].cells[2].innerHTML).toBe(
+            "2020-05-06 01:02:03"
+          );
+          expect(table.element.rows[2].cells[3].innerHTML).toBe(
+            "2020-06-01 22:11:00"
+          );
+          done();
+        });
+      });
+  });
+
+  it("2回目に別のIPアドレスからアクセスされています。: テストケース9", done => {
+    db.access
+      .clear()
+      .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-05-10 00:11:22");
+        ipToUse = "11.22.33.44";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        ipToUse = "ab.cd.ef.gh";
+        dateToUse = new Date("2020-06-01 22:11:00");
+        wrapper.vm.accessFunction().then(() => {
+          const table = wrapper.find("#ipHistory");
+          expect(table.element.rows.length).toBe(3);
+          expect(table.element.rows[0].cells.length).toBe(4);
+          expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+          expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+          expect(table.element.rows[0].cells[2].innerHTML).toBe(
+            "初回のアクセス日時"
+          );
+          expect(table.element.rows[0].cells[3].innerHTML).toBe(
+            "最新のアクセス日時"
+          );
+          expect(table.element.rows[1].cells[0].innerHTML).toBe("11.22.33.44");
+          expect(table.element.rows[1].cells[1].innerHTML).toBe("1");
+          expect(table.element.rows[1].cells[2].innerHTML).toBe(
+            "2020-05-10 00:11:22"
+          );
+          expect(table.element.rows[1].cells[3].innerHTML).toBe(
+            "2020-05-10 00:11:22"
+          );
+          expect(table.element.rows[2].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[2].cells[1].innerHTML).toBe("2");
+          expect(table.element.rows[2].cells[2].innerHTML).toBe(
+            "2020-05-06 01:02:03"
+          );
+          expect(table.element.rows[2].cells[3].innerHTML).toBe(
+            "2020-06-01 22:11:00"
+          );
+          done();
+        });
+      });
+  });
+
+  it("初回のアクセス日時の更新を確認します。: テストケース9", done => {
+    db.access
+      .clear()
+      .then(() => {
+        dateToUse = new Date("2020-06-01 22:11:00");
+        ipToUse = "ab.cd.ef.gh";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-05-6 01:02:03");
+        ipToUse = "ab.cd.ef.gh";
+        return wrapper.vm.accessFunction();
+      })
+      .then(() => {
+        dateToUse = new Date("2020-05-10 00:11:22");
+        ipToUse = "11.22.33.44";
+        wrapper.vm.accessFunction().then(() => {
+          const table = wrapper.find("#ipHistory");
+          expect(table.element.rows.length).toBe(3);
+          expect(table.element.rows[0].cells.length).toBe(4);
+          expect(table.element.rows[0].cells[0].innerHTML).toBe("IPアドレス");
+          expect(table.element.rows[0].cells[1].innerHTML).toBe("アクセス回数");
+          expect(table.element.rows[0].cells[2].innerHTML).toBe(
+            "初回のアクセス日時"
+          );
+          expect(table.element.rows[0].cells[3].innerHTML).toBe(
+            "最新のアクセス日時"
+          );
+          expect(table.element.rows[1].cells[0].innerHTML).toBe("11.22.33.44");
+          expect(table.element.rows[1].cells[1].innerHTML).toBe("1");
+          expect(table.element.rows[1].cells[2].innerHTML).toBe(
+            "2020-05-10 00:11:22"
+          );
+          expect(table.element.rows[1].cells[3].innerHTML).toBe(
+            "2020-05-10 00:11:22"
+          );
+          expect(table.element.rows[2].cells[0].innerHTML).toBe("ab.cd.ef.gh");
+          expect(table.element.rows[2].cells[1].innerHTML).toBe("2");
+          expect(table.element.rows[2].cells[2].innerHTML).toBe(
+            "2020-05-06 01:02:03"
+          );
+          expect(table.element.rows[2].cells[3].innerHTML).toBe(
+            "2020-06-01 22:11:00"
           );
           done();
         });

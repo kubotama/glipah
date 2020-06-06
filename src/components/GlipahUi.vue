@@ -14,16 +14,18 @@
       <table id="ipHistory">
         <thead>
           <tr>
-            <th>id</th>
             <th>IPアドレス</th>
-            <th>アクセス日時</th>
+            <th>アクセス回数</th>
+            <th>初回のアクセス日時</th>
+            <th>最新のアクセス日時</th>
           </tr>
         </thead>
-        <tbody v-for="item in ipHistory" :key="item.id">
+        <tbody v-for="item in ipHistory" :key="item.ipAddress">
           <tr>
-            <td>{{ item.id }}</td>
             <td>{{ item.ipAddress }}</td>
-            <td>{{ item.accessDate }}</td>
+            <td>{{ item.accessCount }}</td>
+            <td>{{ item.firstAccessDate }}</td>
+            <td>{{ item.lastAccessDate }}</td>
           </tr>
         </tbody>
       </table>
@@ -134,11 +136,26 @@ export default {
      * @param {string} accessDate アクセスした日時
      */
     addIpHistory(id, ipAddress, accessDate) {
-      this.ipHistory.unshift({
-        id: id,
-        ipAddress: ipAddress,
-        accessDate: accessDate
-      });
+      const index = this.ipHistory.findIndex(
+        address => address.ipAddress === ipAddress
+      );
+      if (index == -1) {
+        this.ipHistory.unshift({
+          id: id,
+          ipAddress: ipAddress,
+          accessCount: 1,
+          firstAccessDate: accessDate,
+          lastAccessDate: accessDate
+        });
+      } else {
+        if (this.ipHistory[index].firstAccessDate > accessDate) {
+          this.ipHistory[index].firstAccessDate = accessDate;
+        }
+        if (this.ipHistory[index].lastAccessDate < accessDate) {
+          this.ipHistory[index].lastAccessDate = accessDate;
+        }
+        this.ipHistory[index].accessCount++;
+      }
     },
 
     /**
