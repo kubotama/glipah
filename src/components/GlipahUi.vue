@@ -27,6 +27,7 @@
             <td>{{ item.accessCount }}</td>
             <td>{{ item.firstAccessDate }}</td>
             <td>{{ item.lastAccessDate }}</td>
+            <td><v-checkbox></v-checkbox></td>
           </tr>
         </tbody>
       </table>
