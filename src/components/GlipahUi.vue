@@ -18,6 +18,7 @@
             <th>アクセス回数</th>
             <th>初回のアクセス日時</th>
             <th>最新のアクセス日時</th>
+            <th>処理済み</th>
           </tr>
         </thead>
         <tbody v-for="item in ipHistory" :key="item.ipAddress">
@@ -26,6 +27,7 @@
             <td>{{ item.accessCount }}</td>
             <td>{{ item.firstAccessDate }}</td>
             <td>{{ item.lastAccessDate }}</td>
+            <td><v-checkbox></v-checkbox></td>
           </tr>
         </tbody>
       </table>
